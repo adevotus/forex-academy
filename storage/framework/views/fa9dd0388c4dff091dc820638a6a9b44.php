@@ -218,7 +218,7 @@ unset($__errorArgs, $__bag); ?>
                 Not a member yet?
                 <a href="<?php echo e(route('register')); ?>" class="font-semibold text-brand-500 hover:text-brand-600 transition">Create an account &rarr;</a>
             </div>
-                
+
         </div>
     </div>
 </div>
