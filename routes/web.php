@@ -108,6 +108,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/courses/{course}/lessons/{lesson}/edit', [AdminLessonController::class, 'edit'])->name('courses.lessons.edit');
     Route::put('/courses/{course}/lessons/{lesson}', [AdminLessonController::class, 'update'])->name('courses.lessons.update');
     Route::delete('/courses/{course}/lessons/{lesson}', [AdminLessonController::class, 'destroy'])->name('courses.lessons.destroy');
+    Route::post('/lessons/video-chunk', [AdminLessonController::class, 'uploadVideoChunk'])->name('lessons.video.chunk');
 
     Route::resource('robots', AdminRobotController::class)->except(['show']);
     Route::resource('signals', AdminSignalController::class)->except(['show']);

@@ -22,12 +22,16 @@
     </x-slot>
 
     <form method="POST"
+          id="lesson-form"
           action="{{ $lesson->exists
               ? route('admin.courses.lessons.update', [$course, $lesson])
               : route('admin.courses.lessons.store', $course) }}"
           enctype="multipart/form-data">
         @csrf
         @if($lesson->exists) @method('PUT') @endif
+
+        {{-- Hidden fields populated by the video uploader --}}
+        <input type="hidden" name="video_path" id="hidden-video-path" value="{{ old('video_path', $lesson->video_path ?? '') }}">
 
         <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
 
@@ -69,50 +73,121 @@
                             </div>
                         </div>
 
-                        <div class="flex flex-col gap-3 sm:flex-row sm:gap-6">
-                            <label class="flex cursor-pointer items-center gap-3 rounded-xl border border-slate-200 px-4 py-3 hover:bg-slate-50 flex-1">
-                                <input type="checkbox" name="is_preview" value="1"
-                                       @checked(old('is_preview', $lesson->is_preview))
-                                       class="h-4 w-4 rounded border-slate-300 text-brand-500">
-                                <div>
-                                    <p class="text-sm font-semibold text-slate-700">Free Preview</p>
-                                    <p class="text-xs text-slate-400">Watchable before course unlock</p>
-                                </div>
-                            </label>
-                        </div>
+                        <label class="flex cursor-pointer items-center gap-3 rounded-xl border border-slate-200 px-4 py-3 hover:bg-slate-50">
+                            <input type="checkbox" name="is_preview" value="1"
+                                   @checked(old('is_preview', $lesson->is_preview))
+                                   class="h-4 w-4 rounded border-slate-300 text-brand-500">
+                            <div>
+                                <p class="text-sm font-semibold text-slate-700">Free Preview</p>
+                                <p class="text-xs text-slate-400">Watchable before course unlock</p>
+                            </div>
+                        </label>
                     </div>
                 </div>
 
-                {{-- Video --}}
+                {{-- ── Video ── --}}
                 <div class="card overflow-hidden">
                     <div class="border-b border-slate-100 bg-slate-50 px-6 py-4">
                         <h2 class="text-sm font-extrabold uppercase tracking-wide text-slate-700">Lesson Video</h2>
-                        <p class="mt-0.5 text-xs text-slate-500">Paste a YouTube / Vimeo URL, or a direct MP4 link.</p>
+                        <p class="mt-0.5 text-xs text-slate-500">Upload a video file directly, or paste a YouTube / Vimeo link.</p>
                     </div>
-                    <div class="p-6 space-y-4">
-                        <div>
+                    <div class="p-6 space-y-5">
+
+                        {{-- Tab switcher --}}
+                        <div class="flex gap-1 rounded-xl bg-slate-100 p-1">
+                            <button type="button" id="tab-upload"
+                                    class="video-tab flex-1 rounded-lg py-2 text-xs font-bold transition">
+                                ⬆ Upload File
+                            </button>
+                            <button type="button" id="tab-url"
+                                    class="video-tab flex-1 rounded-lg py-2 text-xs font-bold transition">
+                                🔗 Paste URL
+                            </button>
+                        </div>
+
+                        {{-- Upload panel --}}
+                        <div id="panel-upload">
+
+                            {{-- Current uploaded video --}}
+                            @php $hasVideo = $lesson->exists && ($lesson->video_path ?? false); @endphp
+                            @if($hasVideo)
+                                <div class="mb-4 flex items-center gap-3 rounded-xl border border-emerald-100 bg-emerald-50 p-3">
+                                    <svg class="h-5 w-5 flex-shrink-0 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-xs font-semibold text-emerald-700">Current video</p>
+                                        <a href="{{ asset('storage/'.$lesson->video_path) }}" target="_blank"
+                                           class="block truncate text-xs text-emerald-600 hover:underline">
+                                            {{ basename($lesson->video_path) }}
+                                        </a>
+                                    </div>
+                                    <a href="{{ asset('storage/'.$lesson->video_path) }}" target="_blank"
+                                       class="flex-shrink-0 rounded-lg border border-emerald-200 px-3 py-1.5 text-[11px] font-bold text-emerald-700 hover:bg-emerald-100 transition">
+                                        Preview ↗
+                                    </a>
+                                </div>
+                            @endif
+
+                            {{-- Drop zone --}}
+                            <label id="video-drop-zone"
+                                   class="flex cursor-pointer flex-col items-center gap-3 rounded-xl border-2 border-dashed border-slate-200 bg-slate-50 p-10 text-center transition hover:border-brand-400 hover:bg-brand-50">
+
+                                <div id="vdz-idle" class="flex flex-col items-center gap-3">
+                                    <div class="flex h-16 w-16 items-center justify-center rounded-2xl border border-slate-200 bg-white shadow-sm">
+                                        <svg class="h-8 w-8 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-semibold text-slate-700">{{ $hasVideo ? 'Replace video' : 'Click to upload video' }}</p>
+                                        <p class="mt-0.5 text-xs text-slate-400">MP4, MOV, AVI, WEBM, MKV — no size limit</p>
+                                    </div>
+                                </div>
+
+                                {{-- Progress state --}}
+                                <div id="vdz-uploading" class="hidden w-full flex-col items-center gap-3">
+                                    <p id="vdz-filename" class="text-sm font-semibold text-slate-700 truncate max-w-xs"></p>
+                                    <div class="w-full max-w-sm">
+                                        <div class="flex justify-between text-xs text-slate-500 mb-1">
+                                            <span id="vdz-progress-text">Uploading…</span>
+                                            <span id="vdz-percent">0%</span>
+                                        </div>
+                                        <div class="h-2 w-full overflow-hidden rounded-full bg-slate-200">
+                                            <div id="vdz-bar" class="h-2 rounded-full bg-brand-500 transition-all duration-200" style="width:0%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{-- Done state --}}
+                                <div id="vdz-done" class="hidden flex-col items-center gap-2">
+                                    <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-50">
+                                        <svg class="h-7 w-7 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                    </div>
+                                    <p id="vdz-done-name" class="text-sm font-semibold text-emerald-700 truncate max-w-xs"></p>
+                                    <p class="text-xs text-slate-400">Upload complete — click to replace</p>
+                                </div>
+
+                                <input type="file" id="video-file-input" accept="video/*" class="hidden">
+                            </label>
+                        </div>
+
+                        {{-- URL panel --}}
+                        <div id="panel-url" class="hidden">
                             <label class="label" for="video_url">Video URL</label>
                             <div class="relative">
                                 <span class="pointer-events-none absolute inset-y-0 left-3 flex items-center text-slate-400">
                                     <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
                                 </span>
                                 <input id="video_url" type="url" name="video_url"
-                                       value="{{ old('video_url', $lesson->video_url) }}"
+                                       value="{{ old('video_url', $lesson->video_url ?? '') }}"
                                        class="input pl-10" placeholder="https://youtube.com/watch?v=...">
                             </div>
-                            @error('video_url')<p class="mt-1 text-xs text-rose-500">{{ $message }}</p>@enderror
+                            @if($lesson->exists && ($lesson->video_url ?? false))
+                                <div class="mt-3 flex items-center gap-3 rounded-xl border border-brand-100 bg-brand-50 p-3">
+                                    <svg class="h-4 w-4 flex-shrink-0 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+                                    <a href="{{ $lesson->video_url }}" target="_blank"
+                                       class="truncate text-xs font-medium text-brand-600 hover:underline">{{ $lesson->video_url }}</a>
+                                </div>
+                            @endif
                         </div>
 
-                        @if($lesson->exists && $lesson->video_url)
-                            <div class="flex items-center gap-3 rounded-xl border border-brand-100 bg-brand-50 p-3">
-                                <svg class="h-5 w-5 flex-shrink-0 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
-                                <div class="flex-1 min-w-0">
-                                    <p class="text-xs font-medium text-brand-700">Current video</p>
-                                    <a href="{{ $lesson->video_url }}" target="_blank"
-                                       class="truncate block text-xs text-brand-600 hover:underline">{{ $lesson->video_url }}</a>
-                                </div>
-                            </div>
-                        @endif
                     </div>
                 </div>
 
@@ -139,10 +214,11 @@
                             <input type="file" name="thumbnail" accept="image/*" class="sr-only" id="thumb-input">
                         </label>
                         <p id="thumb-filename" class="mt-2 hidden text-xs font-medium text-brand-600"></p>
+                        @error('thumbnail')<p class="mt-1 text-xs text-rose-500">{{ $message }}</p>@enderror
                     </div>
                 </div>
 
-                {{-- Quiz / Content Notes --}}
+                {{-- Lesson Notes --}}
                 <div class="card overflow-hidden">
                     <div class="border-b border-slate-100 bg-slate-50 px-6 py-4">
                         <h2 class="text-sm font-extrabold uppercase tracking-wide text-slate-700">Lesson Notes</h2>
@@ -163,12 +239,17 @@
                 {{-- Save panel --}}
                 <div class="card p-6 space-y-3">
                     <h2 class="text-sm font-extrabold uppercase tracking-wide text-slate-700">Save</h2>
-                    <button type="submit" class="btn-primary w-full py-2.5">
+                    <button type="submit" id="save-btn" class="btn-primary w-full py-2.5">
                         <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                         {{ $lesson->exists ? 'Save Changes' : 'Add Lesson' }}
                     </button>
                     <a href="{{ route('admin.courses.edit', $course) }}"
                        class="btn-outline w-full py-2.5 text-center text-sm">Cancel</a>
+
+                    {{-- Upload warning shown while video is uploading --}}
+                    <div id="upload-warning" class="hidden rounded-xl border border-amber-100 bg-amber-50 p-3 text-xs text-amber-700">
+                        <strong>Please wait</strong> — video upload in progress. The save button will re-enable when complete.
+                    </div>
                 </div>
 
                 {{-- Course context --}}
@@ -200,6 +281,7 @@
                         <li class="flex gap-2"><span class="mt-0.5 text-gold-400">•</span> Mark lesson 1 as "Free Preview" to attract students.</li>
                         <li class="flex gap-2"><span class="mt-0.5 text-gold-400">•</span> Keep videos under 20 minutes for better completion rates.</li>
                         <li class="flex gap-2"><span class="mt-0.5 text-gold-400">•</span> Add notes with key takeaways below each video.</li>
+                        <li class="flex gap-2"><span class="mt-0.5 text-gold-400">•</span> Large videos upload in chunks — stay on the page until done.</li>
                     </ul>
                 </div>
 
@@ -208,7 +290,38 @@
     </form>
 
     <script>
-        // Thumbnail preview
+    (function () {
+        // ── Tab switcher ─────────────────────────────────────────────────────
+        const tabUpload  = document.getElementById('tab-upload');
+        const tabUrl     = document.getElementById('tab-url');
+        const panelUp    = document.getElementById('panel-upload');
+        const panelUrl   = document.getElementById('panel-url');
+
+        // Decide initial active tab
+        const hasVideoPath = '{{ $lesson->video_path ?? '' }}' !== '';
+        const hasVideoUrl  = '{{ $lesson->video_url  ?? '' }}' !== '';
+        let activeTab = hasVideoUrl && !hasVideoPath ? 'url' : 'upload';
+
+        function setTab(t) {
+            activeTab = t;
+            tabUpload.classList.toggle('bg-white', t === 'upload');
+            tabUpload.classList.toggle('shadow-sm', t === 'upload');
+            tabUpload.classList.toggle('text-slate-900', t === 'upload');
+            tabUpload.classList.toggle('text-slate-500', t !== 'upload');
+
+            tabUrl.classList.toggle('bg-white', t === 'url');
+            tabUrl.classList.toggle('shadow-sm', t === 'url');
+            tabUrl.classList.toggle('text-slate-900', t === 'url');
+            tabUrl.classList.toggle('text-slate-500', t !== 'url');
+
+            panelUp.classList.toggle('hidden', t !== 'upload');
+            panelUrl.classList.toggle('hidden', t !== 'url');
+        }
+        tabUpload.addEventListener('click', () => setTab('upload'));
+        tabUrl.addEventListener('click',    () => setTab('url'));
+        setTab(activeTab);
+
+        // ── Thumbnail preview ─────────────────────────────────────────────────
         const thumbInput    = document.getElementById('thumb-input');
         const thumbFilename = document.getElementById('thumb-filename');
         if (thumbInput) {
@@ -219,5 +332,115 @@
                 }
             });
         }
+
+        // ── Chunked video uploader ────────────────────────────────────────────
+        const CHUNK_SIZE    = 5 * 1024 * 1024; // 5 MB per chunk
+        const UPLOAD_URL    = '{{ route('admin.lessons.video.chunk') }}';
+        const CSRF_TOKEN    = '{{ csrf_token() }}';
+
+        const fileInput     = document.getElementById('video-file-input');
+        const dropZone      = document.getElementById('video-drop-zone');
+        const idle          = document.getElementById('vdz-idle');
+        const uploading     = document.getElementById('vdz-uploading');
+        const done          = document.getElementById('vdz-done');
+        const bar           = document.getElementById('vdz-bar');
+        const percent       = document.getElementById('vdz-percent');
+        const progressText  = document.getElementById('vdz-progress-text');
+        const vdzFilename   = document.getElementById('vdz-filename');
+        const doneName      = document.getElementById('vdz-done-name');
+        const hiddenPath    = document.getElementById('hidden-video-path');
+        const saveBtn       = document.getElementById('save-btn');
+        const uploadWarning = document.getElementById('upload-warning');
+
+        function setState(state, name) {
+            idle.classList.add('hidden');
+            uploading.classList.add('hidden');
+            done.classList.add('hidden');
+            uploading.classList.remove('flex');
+            done.classList.remove('flex');
+
+            if (state === 'idle')      { idle.classList.remove('hidden'); }
+            if (state === 'uploading') { uploading.classList.remove('hidden'); uploading.classList.add('flex'); vdzFilename.textContent = name || ''; }
+            if (state === 'done')      { done.classList.remove('hidden'); done.classList.add('flex'); doneName.textContent = name || ''; }
+        }
+
+        function lockSave(locked) {
+            saveBtn.disabled = locked;
+            saveBtn.classList.toggle('opacity-50', locked);
+            saveBtn.classList.toggle('cursor-not-allowed', locked);
+            uploadWarning.classList.toggle('hidden', !locked);
+        }
+
+        // Generate a UUID-like string
+        function uid() {
+            return 'xxxx-xxxx-xxxx'.replace(/x/g, () => (Math.random() * 16 | 0).toString(16));
+        }
+
+        async function uploadFile(file) {
+            const totalChunks = Math.ceil(file.size / CHUNK_SIZE);
+            const uuid = uid() + '-' + Date.now();
+            let uploaded = 0;
+
+            setState('uploading', file.name);
+            lockSave(true);
+
+            for (let i = 0; i < totalChunks; i++) {
+                const chunk = file.slice(i * CHUNK_SIZE, (i + 1) * CHUNK_SIZE);
+                const fd = new FormData();
+                fd.append('_token',       CSRF_TOKEN);
+                fd.append('file',         chunk, 'chunk');
+                fd.append('uuid',         uuid);
+                fd.append('index',        i);
+                fd.append('total_chunks', totalChunks);
+                fd.append('filename',     file.name);
+
+                let resp, json;
+                try {
+                    resp = await fetch(UPLOAD_URL, { method: 'POST', body: fd });
+                    json = await resp.json();
+                } catch (e) {
+                    alert('Upload error on chunk ' + i + ': ' + e.message);
+                    setState('idle');
+                    lockSave(false);
+                    return;
+                }
+
+                if (!resp.ok) {
+                    alert('Server error: ' + (json.message || resp.statusText));
+                    setState('idle');
+                    lockSave(false);
+                    return;
+                }
+
+                uploaded++;
+                const pct = Math.round((uploaded / totalChunks) * 100);
+                bar.style.width = pct + '%';
+                percent.textContent = pct + '%';
+                progressText.textContent = 'Uploading chunk ' + uploaded + ' of ' + totalChunks + '…';
+
+                if (json.status === 'complete') {
+                    hiddenPath.value = json.video_path;
+                    setState('done', file.name);
+                    lockSave(false);
+                }
+            }
+        }
+
+        fileInput.addEventListener('change', function () {
+            if (this.files[0]) uploadFile(this.files[0]);
+        });
+
+        // Drag & drop
+        dropZone.addEventListener('dragover',  e => { e.preventDefault(); dropZone.classList.add('border-brand-400','bg-brand-50'); });
+        dropZone.addEventListener('dragleave', e => { dropZone.classList.remove('border-brand-400','bg-brand-50'); });
+        dropZone.addEventListener('drop',      e => {
+            e.preventDefault();
+            dropZone.classList.remove('border-brand-400','bg-brand-50');
+            const f = e.dataTransfer.files[0];
+            if (f && f.type.startsWith('video/')) uploadFile(f);
+            else alert('Please drop a video file.');
+        });
+
+    })();
     </script>
 </x-layouts.admin>
