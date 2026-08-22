@@ -137,6 +137,22 @@
         const btn  = document.getElementById('mobile-menu-btn');
         const menu = document.getElementById('mobile-menu');
         if (btn && menu) btn.addEventListener('click', () => menu.classList.toggle('hidden'));
+
+        // Sticky header — reinforce shadow + solid bg on scroll
+        (function () {
+            const header = document.querySelector('header');
+            if (!header) return;
+            function onScroll() {
+                if (window.scrollY > 12) {
+                    header.classList.remove('bg-white/90', 'backdrop-blur-lg', 'shadow-sm');
+                    header.classList.add('bg-white', 'shadow-md');
+                } else {
+                    header.classList.remove('bg-white', 'shadow-md');
+                    header.classList.add('bg-white/90', 'backdrop-blur-lg', 'shadow-sm');
+                }
+            }
+            window.addEventListener('scroll', onScroll, { passive: true });
+        })();
     </script>
  <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>

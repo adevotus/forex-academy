@@ -67,6 +67,14 @@
                     <svg class="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
                     Mentorship
                 </a>
+
+                <p class="mb-2 mt-5 px-3 text-[10px] font-semibold uppercase tracking-widest text-slate-600">System</p>
+
+                <a href="{{ route('admin.pricing') }}"
+                   class="{{ request()->routeIs('admin.pricing*') ? 'sidebar-link-active' : 'sidebar-link' }}">
+                    <svg class="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    Pricing
+                </a>
             </nav>
 
             {{-- User footer --}}
@@ -121,6 +129,87 @@
                 </nav>
             </div>
 
+            {{-- ── Desktop topbar ───────────────────────────────── --}}
+            <div class="hidden lg:flex items-center justify-between border-b border-slate-200 bg-white px-6 py-3 sticky top-0 z-30">
+
+                {{-- Left: breadcrumb / page title --}}
+                <div class="flex items-center gap-2 text-sm text-slate-500">
+                    <span class="font-semibold text-slate-700">Admin Panel</span>
+                    @if(isset($header))
+                        <svg class="h-3.5 w-3.5 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                        <span class="text-slate-500">{{ is_string($header) ? $header : '' }}</span>
+                    @endif
+                </div>
+
+                {{-- Right: notification bell + avatar --}}
+                <div class="flex items-center gap-3">
+
+                    {{-- Notification Bell --}}
+                    <a href="{{ route('admin.payments.index') }}"
+                       class="relative flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 transition hover:bg-slate-50 hover:text-slate-700">
+                        <svg class="h-4.5 w-4.5 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                        </svg>
+                        @if(($pendingPaymentsCount ?? 0) > 0)
+                            <span class="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-rose-500 text-[9px] font-bold text-white">
+                                {{ $pendingPaymentsCount > 9 ? '9+' : $pendingPaymentsCount }}
+                            </span>
+                        @endif
+                    </a>
+
+                    {{-- Avatar dropdown --}}
+                    <div class="relative" id="admin-avatar-menu">
+                        <button id="admin-avatar-btn"
+                                class="flex items-center gap-2.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm transition hover:bg-slate-50">
+                            <span class="flex h-7 w-7 items-center justify-center rounded-full bg-gold-500/20 text-xs font-bold text-gold-600">
+                                {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                            </span>
+                            <span class="hidden font-medium text-slate-700 sm:block max-w-[120px] truncate">{{ auth()->user()->name }}</span>
+                            <svg class="h-3.5 w-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                        </button>
+
+                        {{-- Dropdown panel --}}
+                        <div id="admin-avatar-dropdown"
+                             class="absolute right-0 top-full z-50 mt-2 hidden w-52 rounded-xl border border-slate-200 bg-white py-1 shadow-lg">
+
+                            {{-- User info --}}
+                            <div class="border-b border-slate-100 px-4 py-3">
+                                <p class="truncate text-sm font-semibold text-slate-900">{{ auth()->user()->name }}</p>
+                                <p class="truncate text-xs text-slate-500">{{ auth()->user()->email }}</p>
+                            </div>
+
+                            {{-- Links --}}
+                            <a href="{{ route('admin.profile') }}"
+                               class="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-50 hover:text-brand-600">
+                                <svg class="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                                Profile
+                            </a>
+                            <a href="{{ route('admin.preferences') }}"
+                               class="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-50 hover:text-brand-600">
+                                <svg class="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+                                Preferences
+                            </a>
+                            <a href="{{ route('admin.pricing') }}"
+                               class="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-50 hover:text-brand-600">
+                                <svg class="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                Pricing
+                            </a>
+
+                            <div class="my-1 border-t border-slate-100"></div>
+
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit"
+                                        class="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-rose-600 transition hover:bg-rose-50">
+                                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                                    Log out
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <main class="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
                 @if (isset($header))
                     <div class="mb-8 flex flex-wrap items-center justify-between gap-4">{{ $header }}</div>
@@ -132,8 +221,29 @@
     </div>
 
     <script>
+        // Mobile nav toggle
         const btn  = document.getElementById('mob-admin-btn');
         const menu = document.getElementById('mob-admin-menu');
         if (btn && menu) btn.addEventListener('click', () => menu.classList.toggle('hidden'));
+
+        // Avatar dropdown
+        (function () {
+            const avatarBtn      = document.getElementById('admin-avatar-btn');
+            const avatarDropdown = document.getElementById('admin-avatar-dropdown');
+            if (!avatarBtn || !avatarDropdown) return;
+
+            avatarBtn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                avatarDropdown.classList.toggle('hidden');
+            });
+
+            document.addEventListener('click', function () {
+                avatarDropdown.classList.add('hidden');
+            });
+
+            avatarDropdown.addEventListener('click', function (e) {
+                e.stopPropagation();
+            });
+        })();
     </script>
 </x-layouts.app>

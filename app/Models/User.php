@@ -14,6 +14,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name', 'email', 'password', 'role', 'status',
         'phone', 'country', 'avatar', 'registration_fee_paid', 'approved_at',
+        'preferences',
     ];
 
     protected $hidden = [
@@ -23,11 +24,18 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
-            'approved_at' => 'datetime',
+            'email_verified_at'     => 'datetime',
+            'approved_at'           => 'datetime',
             'registration_fee_paid' => 'boolean',
-            'password' => 'hashed',
+            'password'              => 'hashed',
+            'preferences'           => 'array',
         ];
+    }
+
+    /** Convenience: read a single preference key with optional default. */
+    public function pref(string $key, mixed $default = null): mixed
+    {
+        return ($this->preferences ?? [])[$key] ?? $default;
     }
 
     public function isAdmin(): bool

@@ -1,29 +1,70 @@
 <x-layouts.public title="Trading Robots — EMMIOXFOREX ACADEMY">
-    <section class="px-4 py-16 sm:px-6 lg:px-8">
-        <div class="mx-auto max-w-6xl">
-            <div class="mx-auto max-w-2xl text-center">
-                <span class="badge mx-auto">Automated Trading</span>
-                <h1 class="mt-4 text-4xl font-extrabold text-white">Robot / EA Subscriptions</h1>
-                <p class="mt-4 text-slate-400">Systematic trade execution, paired with setup guidance and a performance log.</p>
-            </div>
 
-            <div class="mt-14 grid grid-cols-1 gap-6 sm:grid-cols-2">
+    {{-- Page hero --}}
+    <section class="border-b border-slate-200 bg-slate-50 px-4 py-20 sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-2xl text-center">
+            <span class="badge mx-auto">Automated Trading</span>
+            <h1 class="mt-5 text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
+                Robot / EA Subscriptions
+            </h1>
+            <p class="mt-5 text-lg text-slate-600">
+                Systematic trade execution, paired with setup guidance and a performance log.
+            </p>
+        </div>
+    </section>
+
+    {{-- Robot cards --}}
+    <section class="px-4 py-16 sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-5xl">
+            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
                 @foreach ($robots as $robot)
-                    <div class="card p-8">
-                        <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-500/15 text-brand-300">
-                            <x-icon name="cpu" class="h-6 w-6" />
+                    <div class="card flex flex-col p-8">
+                        <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-gold-50 ring-1 ring-gold-200">
+                            <svg class="h-6 w-6 text-gold-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                                <path d="M8 21h8m-4-4v4"/>
+                            </svg>
                         </div>
-                        <h3 class="mt-5 text-xl font-bold text-white">{{ $robot->name }}</h3>
-                        <p class="mt-1 text-xs text-slate-500">Version {{ $robot->version }}</p>
-                        <p class="mt-3 text-sm leading-relaxed text-slate-400">{{ $robot->description }}</p>
-                        <div class="mt-6 flex items-center justify-between">
-                            <span class="text-2xl font-bold text-white">{{ $robot->priceFormatted() }}</span>
-                            <span class="text-xs text-slate-500">{{ $robot->duration_days }} days access</span>
+
+                        <h3 class="mt-5 text-xl font-extrabold text-slate-900">{{ $robot->name }}</h3>
+                        <p class="mt-1 text-xs font-medium text-slate-400">Version {{ $robot->version }}</p>
+                        <p class="mt-3 flex-1 text-sm leading-relaxed text-slate-600">{{ $robot->description }}</p>
+
+                        <div class="mt-6 flex items-end justify-between">
+                            <div>
+                                <span class="text-3xl font-extrabold text-slate-900">{{ $robot->priceFormatted() }}</span>
+                            </div>
+                            <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600">{{ $robot->duration_days }} days access</span>
                         </div>
-                        <a href="{{ route('register') }}" class="btn-primary mt-6 w-full">Get Access</a>
+
+                        <a href="{{ route('register') }}" class="btn-gold mt-6 w-full py-3 text-sm">
+                            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                            </svg>
+                            Get Access
+                        </a>
                     </div>
                 @endforeach
             </div>
+
+            {{-- Info strip --}}
+            <div class="mt-12 rounded-xl border border-brand-200 bg-brand-50 p-6">
+                <div class="flex items-start gap-4">
+                    <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-brand-100">
+                        <svg class="h-5 w-5 text-brand-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="font-semibold text-slate-900">How robot access works</p>
+                        <p class="mt-1 text-sm leading-relaxed text-slate-600">
+                            Register an academy account, pay the registration fee and submit your robot subscription payment.
+                            Once an admin approves it, the robot files and setup guide become available in your member dashboard.
+                        </p>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
+
 </x-layouts.public>

@@ -6,6 +6,9 @@ use App\Http\Controllers\Admin\LessonController as AdminLessonController;
 use App\Http\Controllers\Admin\MemberController as AdminMemberController;
 use App\Http\Controllers\Admin\MentorshipController as AdminMentorshipController;
 use App\Http\Controllers\Admin\PaymentController as AdminPaymentController;
+use App\Http\Controllers\Admin\PreferencesController as AdminPreferencesController;
+use App\Http\Controllers\Admin\PricingController as AdminPricingController;
+use App\Http\Controllers\Admin\ProfileController as AdminProfileController;
 use App\Http\Controllers\Admin\RobotController as AdminRobotController;
 use App\Http\Controllers\Admin\SignalController as AdminSignalController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
@@ -105,4 +108,20 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/payments', [AdminPaymentController::class, 'index'])->name('payments.index');
     Route::post('/payments/{payment}/approve', [AdminPaymentController::class, 'approve'])->name('payments.approve');
     Route::post('/payments/{payment}/reject', [AdminPaymentController::class, 'reject'])->name('payments.reject');
+
+    // Profile
+    Route::get('/profile', [AdminProfileController::class, 'index'])->name('profile');
+    Route::put('/profile', [AdminProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile/password', [AdminProfileController::class, 'updatePassword'])->name('profile.password');
+
+    // Preferences
+    Route::get('/preferences', [AdminPreferencesController::class, 'index'])->name('preferences');
+    Route::put('/preferences', [AdminPreferencesController::class, 'update'])->name('preferences.update');
+
+    // Pricing
+    Route::get('/pricing', [AdminPricingController::class, 'index'])->name('pricing');
+    Route::put('/pricing/settings', [AdminPricingController::class, 'updateSettings'])->name('pricing.settings');
+    Route::put('/pricing/courses', [AdminPricingController::class, 'updateCourses'])->name('pricing.courses');
+    Route::put('/pricing/robots', [AdminPricingController::class, 'updateRobots'])->name('pricing.robots');
+    Route::put('/pricing/mentorship', [AdminPricingController::class, 'updateMentorship'])->name('pricing.mentorship');
 });
