@@ -157,58 +157,85 @@
                     </div>
 
                     {{-- Payment methods --}}
-                    <div>
-                        <p class="mb-2 text-[10px] font-semibold uppercase tracking-widest text-slate-400">Payment Options</p>
-                        <div class="space-y-2">
+                    <div class="space-y-3">
+                        <p class="text-[10px] font-semibold uppercase tracking-widest text-slate-400">How to Pay</p>
 
-                            {{-- Bank Transfer --}}
-                            @if($bankName || $accNum)
-                            <div class="rounded-xl border border-slate-200 bg-white p-3.5 shadow-sm">
-                                <div class="mb-2 flex items-center gap-2">
-                                    <div class="flex h-6 w-6 items-center justify-center rounded-lg bg-blue-50">
-                                        <svg class="h-3.5 w-3.5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
-                                    </div>
-                                    <span class="text-xs font-bold text-slate-700">Bank Transfer</span>
+                        {{-- ① Bank Transfer — always shown --}}
+                        <div class="overflow-hidden rounded-xl border border-blue-100 bg-white shadow-sm">
+                            {{-- header --}}
+                            <div class="flex items-center gap-2 border-b border-blue-50 bg-blue-50 px-3.5 py-2.5">
+                                <div class="flex h-6 w-6 items-center justify-center rounded-lg bg-blue-600">
+                                    <svg class="h-3.5 w-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
                                 </div>
-                                @if($bankName)
-                                <div class="flex justify-between text-xs"><span class="text-slate-400">Bank</span><span class="font-semibold text-slate-700">{{ $bankName }}</span></div>
-                                @endif
-                                @if($accName)
-                                <div class="mt-1 flex justify-between text-xs"><span class="text-slate-400">Account Name</span><span class="font-semibold text-slate-700">{{ $accName }}</span></div>
-                                @endif
-                                @if($accNum)
-                                <div class="mt-1 flex justify-between text-xs"><span class="text-slate-400">Account No.</span><span class="font-mono font-bold text-slate-900">{{ $accNum }}</span></div>
-                                @endif
+                                <span class="text-xs font-bold text-blue-800">Bank Transfer</span>
+                            </div>
+                            {{-- rows --}}
+                            <div class="divide-y divide-slate-50 px-3.5 py-1">
+                                <div class="flex items-center justify-between gap-2 py-2">
+                                    <span class="text-[11px] text-slate-400">Bank</span>
+                                    <span class="text-right text-[11px] font-semibold text-slate-800">{{ $bankName ?: '—' }}</span>
+                                </div>
+                                <div class="flex items-center justify-between gap-2 py-2">
+                                    <span class="text-[11px] text-slate-400">Account Name</span>
+                                    <span class="text-right text-[11px] font-semibold text-slate-800">{{ $accName ?: '—' }}</span>
+                                </div>
+                                <div class="flex items-center justify-between gap-2 py-2">
+                                    <span class="text-[11px] text-slate-400">Account No.</span>
+                                    <span class="text-right font-mono text-[12px] font-bold text-slate-900 tracking-wide select-all">{{ $accNum ?: '—' }}</span>
+                                </div>
                                 @if($swift)
-                                <div class="mt-1 flex justify-between text-xs"><span class="text-slate-400">SWIFT</span><span class="font-mono font-semibold text-slate-700">{{ $swift }}</span></div>
+                                <div class="flex items-center justify-between gap-2 py-2">
+                                    <span class="text-[11px] text-slate-400">SWIFT / BIC</span>
+                                    <span class="text-right font-mono text-[11px] font-semibold text-slate-700">{{ $swift }}</span>
+                                </div>
                                 @endif
                             </div>
-                            @endif
-
-                            {{-- Mobile Money --}}
-                            @if($mobile)
-                            <div class="rounded-xl border border-slate-200 bg-white p-3.5 shadow-sm">
-                                <div class="mb-2 flex items-center gap-2">
-                                    <div class="flex h-6 w-6 items-center justify-center rounded-lg bg-emerald-50">
-                                        <svg class="h-3.5 w-3.5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
-                                    </div>
-                                    <span class="text-xs font-bold text-slate-700">Mobile Money</span>
-                                </div>
-                                <div class="flex justify-between text-xs"><span class="text-slate-400">Number</span><span class="font-mono font-bold text-slate-900">{{ $mobile }}</span></div>
-                            </div>
-                            @endif
-
-                            {{-- Fallback instructions --}}
-                            @if(!$bankName && !$accNum && !$mobile)
-                            <div class="rounded-xl border border-slate-200 bg-white p-3.5 shadow-sm text-xs text-slate-600 leading-relaxed">
-                                {{ $payInfo ?: 'Transfer the course fee to the account provided by admin, then upload your receipt.' }}
-                            </div>
-                            @endif
                         </div>
+
+                        {{-- ② Mobile Money — always shown --}}
+                        <div class="overflow-hidden rounded-xl border border-emerald-100 bg-white shadow-sm">
+                            {{-- header --}}
+                            <div class="flex items-center gap-2 border-b border-emerald-50 bg-emerald-50 px-3.5 py-2.5">
+                                <div class="flex h-6 w-6 items-center justify-center rounded-lg bg-emerald-600">
+                                    <svg class="h-3.5 w-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+                                </div>
+                                <span class="text-xs font-bold text-emerald-800">Mobile Money</span>
+                            </div>
+                            {{-- rows --}}
+                            <div class="divide-y divide-slate-50 px-3.5 py-1">
+                                <div class="flex items-center justify-between gap-2 py-2">
+                                    <span class="text-[11px] text-slate-400">Number</span>
+                                    <span class="text-right font-mono text-[12px] font-bold text-slate-900 tracking-wide select-all">{{ $mobile ?: '—' }}</span>
+                                </div>
+                                @php $mobileName = \App\Models\Setting::get('mobile_money_name', ''); @endphp
+                                @if($mobileName)
+                                <div class="flex items-center justify-between gap-2 py-2">
+                                    <span class="text-[11px] text-slate-400">Name</span>
+                                    <span class="text-right text-[11px] font-semibold text-slate-800">{{ $mobileName }}</span>
+                                </div>
+                                @endif
+                                @php $mobileProvider = \App\Models\Setting::get('mobile_money_provider', ''); @endphp
+                                @if($mobileProvider)
+                                <div class="flex items-center justify-between gap-2 py-2">
+                                    <span class="text-[11px] text-slate-400">Provider</span>
+                                    <span class="text-right text-[11px] font-semibold text-slate-800">{{ $mobileProvider }}</span>
+                                </div>
+                                @endif
+                            </div>
+                        </div>
+
+                        {{-- Extra instructions if set --}}
+                        @if($payInfo)
+                        <div class="rounded-xl border border-amber-100 bg-amber-50 px-3.5 py-2.5 text-[11px] leading-relaxed text-amber-800">
+                            <span class="font-semibold">Note: </span>{{ $payInfo }}
+                        </div>
+                        @endif
                     </div>
 
-                    {{-- Note --}}
-                    <p class="text-[10px] leading-relaxed text-slate-400">After transferring, upload your payment receipt on the right and submit for admin review.</p>
+                    {{-- Footer note --}}
+                    <p class="mt-auto pt-4 text-[10px] leading-relaxed text-slate-400">
+                        After paying, upload your receipt on the right. Admin will verify and unlock the course within 24 hours.
+                    </p>
                 </div>
 
                 {{-- RIGHT — Upload proof form --}}

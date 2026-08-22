@@ -67,27 +67,20 @@
             </nav>
 
             <div class="border-t border-white/5 p-4">
-                <div class="mb-3 flex items-center gap-3">
+                <div class="flex items-center gap-3">
                     <div class="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-brand-500/20 text-sm font-bold text-brand-300">
                         <?php echo e(strtoupper(substr($authUser->name, 0, 1))); ?>
 
                     </div>
-                    <div class="min-w-0">
+                    <div class="min-w-0 flex-1">
                         <p class="truncate text-sm font-semibold text-white"><?php echo e($authUser->name); ?></p>
                         <p class="truncate text-xs text-slate-500">Member</p>
                     </div>
-                </div>
-                <div class="grid grid-cols-2 gap-2">
-                    <a href="<?php echo e(route('member.billing.index')); ?>"
-                       class="flex items-center justify-center gap-1.5 rounded-lg border border-white/10 px-3 py-2 text-xs font-medium text-slate-400 transition hover:bg-white/5 hover:text-white">
-                        <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-                        Billing
-                    </a>
                     <form method="POST" action="<?php echo e(route('logout')); ?>" data-no-loading>
                         <?php echo csrf_field(); ?>
-                        <button type="submit" class="flex w-full items-center justify-center gap-1.5 rounded-lg border border-white/10 px-3 py-2 text-xs font-medium text-slate-400 transition hover:bg-white/5 hover:text-white">
-                            <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
-                            Log out
+                        <button type="submit" title="Log out"
+                                class="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 text-slate-400 transition hover:bg-white/10 hover:text-white">
+                            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
                         </button>
                     </form>
                 </div>
@@ -180,14 +173,6 @@
                                     <p class="truncate text-sm font-semibold text-slate-900"><?php echo e($authUser->name); ?></p>
                                     <p class="truncate text-xs text-slate-500"><?php echo e($authUser->email); ?></p>
                                 </div>
-                                <a href="<?php echo e(route('member.billing.index')); ?>" class="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-50 hover:text-brand-600">
-                                    <svg class="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-                                    Billing
-                                </a>
-                                <a href="<?php echo e(route('member.courses.index')); ?>" class="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-50 hover:text-brand-600">
-                                    <svg class="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13"/></svg>
-                                    My Courses
-                                </a>
                                 <div class="my-1 border-t border-slate-100"></div>
                                 <form method="POST" action="<?php echo e(route('logout')); ?>" data-no-loading>
                                     <?php echo csrf_field(); ?>

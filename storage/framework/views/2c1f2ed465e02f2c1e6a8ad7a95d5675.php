@@ -159,53 +159,189 @@
 
     
     <div id="unlock-modal"
-         class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/50 p-4 backdrop-blur-sm"
+         class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/60 p-4 backdrop-blur-sm"
          onclick="if(event.target===this) closeUnlockModal()">
-        <div class="w-full max-w-md rounded-2xl border border-slate-200 bg-white shadow-2xl">
 
+        <div class="w-full max-w-2xl overflow-hidden rounded-2xl bg-white shadow-2xl">
+
+            
             <div class="flex items-center justify-between border-b border-slate-100 px-6 py-4">
-                <div>
-                    <h3 class="font-bold text-slate-900">Unlock Course</h3>
-                    <p id="modal-course-title" class="mt-0.5 text-sm text-slate-500"></p>
+                <div class="flex items-center gap-3">
+                    <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-50">
+                        <svg class="h-5 w-5 text-brand-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-900 leading-tight">Unlock Course</h3>
+                        <p id="modal-course-title" class="text-xs text-slate-500"></p>
+                    </div>
                 </div>
-                <button onclick="closeUnlockModal()" class="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-600">
+                <button onclick="closeUnlockModal()" class="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition">
                     <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
             </div>
 
-            <div class="mx-6 mt-4 flex items-center gap-3 rounded-xl border border-brand-100 bg-brand-50 px-4 py-3">
-                <svg class="h-5 w-5 flex-shrink-0 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                <div>
-                    <p class="text-xs text-brand-700">Amount to pay</p>
-                    <p id="modal-price" class="text-lg font-bold text-brand-900"></p>
-                </div>
-            </div>
+            
+            <div class="flex flex-col sm:flex-row divide-y sm:divide-y-0 sm:divide-x divide-slate-100">
 
-            <form id="unlock-form" method="POST" action="" enctype="multipart/form-data" class="p-6 pt-4">
-                <?php echo csrf_field(); ?>
-                <?php $payInfo = \App\Models\Setting::get('payment_instructions', '') ?>
-                <div class="mt-3">
-                    <label class="mb-1.5 block text-sm font-semibold text-slate-700">How to pay</label>
-                    <div class="rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm text-slate-600">
-                        <?php echo e($payInfo ?: 'Transfer the course fee to the account provided by admin, then upload your receipt below.'); ?>
+                
+                <?php
+                    $payInfo  = \App\Models\Setting::get('payment_instructions', '');
+                    $bankName = \App\Models\Setting::get('bank_name', '');
+                    $accName  = \App\Models\Setting::get('account_name', '');
+                    $accNum   = \App\Models\Setting::get('account_number', '');
+                    $mobile   = \App\Models\Setting::get('mobile_money', '');
+                    $swift    = \App\Models\Setting::get('swift_code', '');
+                ?>
+                <div class="flex flex-col gap-5 bg-slate-50 p-6 sm:w-72 sm:flex-shrink-0">
 
+                    
+                    <div class="flex items-center gap-3 rounded-xl border border-brand-100 bg-white px-4 py-3 shadow-sm">
+                        <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-brand-600">
+                            <svg class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-medium uppercase tracking-wide text-slate-400">Amount Due</p>
+                            <p id="modal-price" class="text-xl font-extrabold text-slate-900"></p>
+                        </div>
                     </div>
+
+                    
+                    <div class="space-y-3">
+                        <p class="text-[10px] font-semibold uppercase tracking-widest text-slate-400">How to Pay</p>
+
+                        
+                        <div class="overflow-hidden rounded-xl border border-blue-100 bg-white shadow-sm">
+                            
+                            <div class="flex items-center gap-2 border-b border-blue-50 bg-blue-50 px-3.5 py-2.5">
+                                <div class="flex h-6 w-6 items-center justify-center rounded-lg bg-blue-600">
+                                    <svg class="h-3.5 w-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+                                </div>
+                                <span class="text-xs font-bold text-blue-800">Bank Transfer</span>
+                            </div>
+                            
+                            <div class="divide-y divide-slate-50 px-3.5 py-1">
+                                <div class="flex items-center justify-between gap-2 py-2">
+                                    <span class="text-[11px] text-slate-400">Bank</span>
+                                    <span class="text-right text-[11px] font-semibold text-slate-800"><?php echo e($bankName ?: '—'); ?></span>
+                                </div>
+                                <div class="flex items-center justify-between gap-2 py-2">
+                                    <span class="text-[11px] text-slate-400">Account Name</span>
+                                    <span class="text-right text-[11px] font-semibold text-slate-800"><?php echo e($accName ?: '—'); ?></span>
+                                </div>
+                                <div class="flex items-center justify-between gap-2 py-2">
+                                    <span class="text-[11px] text-slate-400">Account No.</span>
+                                    <span class="text-right font-mono text-[12px] font-bold text-slate-900 tracking-wide select-all"><?php echo e($accNum ?: '—'); ?></span>
+                                </div>
+                                <?php if($swift): ?>
+                                <div class="flex items-center justify-between gap-2 py-2">
+                                    <span class="text-[11px] text-slate-400">SWIFT / BIC</span>
+                                    <span class="text-right font-mono text-[11px] font-semibold text-slate-700"><?php echo e($swift); ?></span>
+                                </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+
+                        
+                        <div class="overflow-hidden rounded-xl border border-emerald-100 bg-white shadow-sm">
+                            
+                            <div class="flex items-center gap-2 border-b border-emerald-50 bg-emerald-50 px-3.5 py-2.5">
+                                <div class="flex h-6 w-6 items-center justify-center rounded-lg bg-emerald-600">
+                                    <svg class="h-3.5 w-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+                                </div>
+                                <span class="text-xs font-bold text-emerald-800">Mobile Money</span>
+                            </div>
+                            
+                            <div class="divide-y divide-slate-50 px-3.5 py-1">
+                                <div class="flex items-center justify-between gap-2 py-2">
+                                    <span class="text-[11px] text-slate-400">Number</span>
+                                    <span class="text-right font-mono text-[12px] font-bold text-slate-900 tracking-wide select-all"><?php echo e($mobile ?: '—'); ?></span>
+                                </div>
+                                <?php $mobileName = \App\Models\Setting::get('mobile_money_name', ''); ?>
+                                <?php if($mobileName): ?>
+                                <div class="flex items-center justify-between gap-2 py-2">
+                                    <span class="text-[11px] text-slate-400">Name</span>
+                                    <span class="text-right text-[11px] font-semibold text-slate-800"><?php echo e($mobileName); ?></span>
+                                </div>
+                                <?php endif; ?>
+                                <?php $mobileProvider = \App\Models\Setting::get('mobile_money_provider', ''); ?>
+                                <?php if($mobileProvider): ?>
+                                <div class="flex items-center justify-between gap-2 py-2">
+                                    <span class="text-[11px] text-slate-400">Provider</span>
+                                    <span class="text-right text-[11px] font-semibold text-slate-800"><?php echo e($mobileProvider); ?></span>
+                                </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+
+                        
+                        <?php if($payInfo): ?>
+                        <div class="rounded-xl border border-amber-100 bg-amber-50 px-3.5 py-2.5 text-[11px] leading-relaxed text-amber-800">
+                            <span class="font-semibold">Note: </span><?php echo e($payInfo); ?>
+
+                        </div>
+                        <?php endif; ?>
+                    </div>
+
+                    
+                    <p class="mt-auto pt-4 text-[10px] leading-relaxed text-slate-400">
+                        After paying, upload your receipt on the right. Admin will verify and unlock the course within 24 hours.
+                    </p>
                 </div>
-                <div class="mt-4">
-                    <label class="mb-1.5 block text-sm font-semibold text-slate-700">Payment Proof <span class="text-rose-500">*</span></label>
-                    <label class="flex cursor-pointer flex-col items-center gap-2 rounded-xl border-2 border-dashed border-slate-200 bg-slate-50 p-6 text-center transition hover:border-brand-300 hover:bg-brand-50">
-                        <svg class="h-8 w-8 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg>
-                        <span class="text-sm font-medium text-slate-600">Click to upload screenshot or PDF</span>
-                        <span class="text-xs text-slate-400">JPG, PNG, PDF — max 5 MB</span>
+
+                
+                <form id="unlock-form" method="POST" action="" enctype="multipart/form-data" class="flex flex-1 flex-col p-6">
+                    <?php echo csrf_field(); ?>
+
+                    <h4 class="mb-4 text-sm font-bold text-slate-800">Upload Payment Proof</h4>
+
+                    
+                    <label id="drop-zone"
+                           class="flex flex-1 cursor-pointer flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed border-slate-200 bg-slate-50 p-8 text-center transition hover:border-brand-400 hover:bg-brand-50">
+                        <div id="dz-idle" class="flex flex-col items-center gap-3">
+                            <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-white shadow-sm border border-slate-200">
+                                <svg class="h-7 w-7 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-sm font-semibold text-slate-700">Click or drag & drop</p>
+                                <p class="mt-0.5 text-xs text-slate-400">Screenshot or PDF of your payment receipt</p>
+                            </div>
+                            <span class="rounded-lg border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-500 shadow-sm">JPG · PNG · PDF — max 5 MB</span>
+                        </div>
+
+                        
+                        <div id="dz-preview" class="hidden flex-col items-center gap-2">
+                            <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-50">
+                                <svg class="h-7 w-7 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            </div>
+                            <p id="dz-filename" class="max-w-[180px] truncate text-sm font-semibold text-emerald-700"></p>
+                            <p class="text-xs text-slate-400">Click to change file</p>
+                        </div>
+
                         <input type="file" name="proof" id="unlock-proof" accept="image/*,.pdf" class="hidden" required>
                     </label>
-                    <p id="unlock-file-name" class="mt-1.5 hidden text-xs text-emerald-600"></p>
-                </div>
-                <button type="submit" class="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-brand-600 px-4 py-3 text-sm font-bold text-white transition hover:bg-brand-700">
-                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                    Submit Payment for Review
-                </button>
-            </form>
+
+                    
+                    <ul class="mt-4 space-y-1">
+                        <li class="flex items-start gap-1.5 text-xs text-slate-400">
+                            <svg class="mt-px h-3.5 w-3.5 flex-shrink-0 text-brand-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            Make sure the receipt clearly shows the amount and transaction ID.
+                        </li>
+                        <li class="flex items-start gap-1.5 text-xs text-slate-400">
+                            <svg class="mt-px h-3.5 w-3.5 flex-shrink-0 text-brand-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            Admin will review and unlock your course within 24 hours.
+                        </li>
+                    </ul>
+
+                    
+                    <button type="submit"
+                            class="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-brand-600 px-4 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-brand-700 active:scale-[.98]">
+                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        Submit Payment for Review
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -214,6 +350,10 @@
         document.getElementById('unlock-form').action = actionUrl;
         document.getElementById('modal-course-title').textContent = courseTitle;
         document.getElementById('modal-price').textContent = price;
+        // reset file picker
+        document.getElementById('dz-idle').classList.remove('hidden');
+        document.getElementById('dz-preview').classList.add('hidden');
+        document.getElementById('unlock-proof').value = '';
         var m = document.getElementById('unlock-modal');
         m.classList.remove('hidden'); m.classList.add('flex');
     }
@@ -223,8 +363,12 @@
     }
     document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeUnlockModal(); });
     document.getElementById('unlock-proof').addEventListener('change', function(){
-        var l = document.getElementById('unlock-file-name');
-        if(this.files.length){ l.textContent='✓ '+this.files[0].name; l.classList.remove('hidden'); }
+        if(this.files.length){
+            document.getElementById('dz-filename').textContent = this.files[0].name;
+            document.getElementById('dz-idle').classList.add('hidden');
+            document.getElementById('dz-preview').classList.remove('hidden');
+            document.getElementById('dz-preview').classList.add('flex');
+        }
     });
     </script>
  <?php echo $__env->renderComponent(); ?>

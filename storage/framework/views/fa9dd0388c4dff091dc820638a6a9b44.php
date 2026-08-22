@@ -218,19 +218,7 @@ unset($__errorArgs, $__bag); ?>
                 Not a member yet?
                 <a href="<?php echo e(route('register')); ?>" class="font-semibold text-brand-500 hover:text-brand-600 transition">Create an account &rarr;</a>
             </div>
-
-            
-            <div class="mt-8 rounded-xl border border-slate-200 bg-slate-50 p-4">
-                <p class="mb-2 flex items-center gap-1.5 text-xs font-semibold text-slate-500">
-                    <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-                    Demo accounts
-                </p>
-                <div class="space-y-1 text-xs text-slate-500">
-                    <div class="flex items-center justify-between"><span class="text-slate-400">Admin:</span><code class="rounded bg-white px-1.5 py-0.5 text-slate-700 border border-slate-200">admin@emmioxforex.academy</code></div>
-                    <div class="flex items-center justify-between"><span class="text-slate-400">Member:</span><code class="rounded bg-white px-1.5 py-0.5 text-slate-700 border border-slate-200">member@emmioxforex.academy</code></div>
-                    <div class="flex items-center justify-between"><span class="text-slate-400">Password:</span><code class="rounded bg-white px-1.5 py-0.5 text-slate-700 border border-slate-200">password</code></div>
-                </div>
-            </div>
+                
         </div>
     </div>
 </div>
