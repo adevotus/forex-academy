@@ -1,0 +1,123 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    body {
+        @apply bg-white text-slate-900 antialiased;
+    }
+    h1, h2, h3, h4 {
+        @apply tracking-tight;
+    }
+}
+
+@layer components {
+
+    /* ── Buttons ─────────────────────────────────────────── */
+    .btn-primary {
+        @apply inline-flex items-center justify-center gap-2 rounded-xl
+               bg-gradient-to-r from-brand-500 to-brand-400
+               px-5 py-2.5 text-sm font-semibold text-white
+               shadow-glow transition
+               hover:from-brand-400 hover:to-brand-300
+               focus:outline-none focus:ring-2 focus:ring-brand-300 focus:ring-offset-2 focus:ring-offset-white;
+    }
+
+    .btn-gold {
+        @apply inline-flex items-center justify-center gap-2 rounded-xl
+               bg-gradient-to-r from-gold-500 to-gold-400
+               px-5 py-2.5 text-sm font-semibold text-navy-950
+               shadow-glow-gold transition
+               hover:from-gold-400 hover:to-gold-300;
+    }
+
+    .btn-outline {
+        @apply inline-flex items-center justify-center gap-2 rounded-xl
+               border border-slate-300 bg-white
+               px-5 py-2.5 text-sm font-semibold text-slate-700
+               transition hover:bg-slate-50 hover:border-slate-400 hover:text-slate-900;
+    }
+
+    .btn-outline-white {
+        @apply inline-flex items-center justify-center gap-2 rounded-xl
+               border border-white/25 bg-white/10
+               px-5 py-2.5 text-sm font-semibold text-white
+               backdrop-blur transition hover:bg-white/20;
+    }
+
+    /* ── Cards ───────────────────────────────────────────── */
+    .card {
+        @apply rounded-2xl border border-slate-200 bg-white shadow-card;
+    }
+
+    .card-hover {
+        @apply rounded-2xl border border-slate-200 bg-white shadow-card
+               transition hover:shadow-card-hover hover:border-brand-200;
+    }
+
+    /* ── Badges ──────────────────────────────────────────── */
+    .badge {
+        @apply inline-flex items-center gap-1.5 rounded-full
+               border border-slate-200 bg-slate-100
+               px-3 py-1 text-xs font-medium text-slate-600;
+    }
+
+    .badge-level-starter      { @apply border-emerald-200 bg-emerald-50 text-emerald-700; }
+    .badge-level-intermediate { @apply border-brand-200   bg-brand-50   text-brand-700; }
+    .badge-level-advanced     { @apply border-violet-200  bg-violet-50  text-violet-700; }
+    .badge-level-pro          { @apply border-gold-400/40 bg-amber-50   text-amber-700; }
+
+    /* ── Form elements ───────────────────────────────────── */
+    .input {
+        @apply w-full rounded-xl border border-slate-300 bg-white
+               px-4 py-2.5 text-sm text-slate-900
+               placeholder:text-slate-400
+               focus:border-brand-400 focus:ring-1 focus:ring-brand-400 focus:outline-none
+               transition;
+    }
+
+    .input-dark {
+        @apply w-full rounded-xl border border-white/15 bg-white/10
+               px-4 py-2.5 text-sm text-white
+               placeholder:text-slate-400
+               focus:border-brand-300 focus:ring-1 focus:ring-brand-300 focus:outline-none
+               transition;
+    }
+
+    .label {
+        @apply mb-1.5 block text-sm font-semibold text-slate-700;
+    }
+
+    /* ── Public navbar links ─────────────────────────────── */
+    .nav-link {
+        @apply rounded-lg px-3 py-2 text-sm font-medium text-slate-600
+               transition hover:bg-slate-100 hover:text-slate-900;
+    }
+
+    .nav-link-active {
+        @apply rounded-lg bg-brand-50 px-3 py-2 text-sm font-semibold text-brand-600;
+    }
+
+    /* ── Sidebar nav links (dark panels) ─────────────────── */
+    .sidebar-link {
+        @apply flex items-center gap-3 rounded-lg px-3 py-2.5
+               text-sm font-medium text-slate-300
+               transition hover:bg-white/10 hover:text-white;
+    }
+
+    .sidebar-link-active {
+        @apply flex items-center gap-3 rounded-lg px-3 py-2.5
+               text-sm font-semibold text-white bg-white/15;
+    }
+
+    /* ── Section helpers ─────────────────────────────────── */
+    .section-title {
+        @apply text-3xl font-extrabold text-slate-900;
+    }
+
+    .section-subtitle {
+        @apply mt-3 text-base text-slate-500 leading-relaxed;
+    }
+}
