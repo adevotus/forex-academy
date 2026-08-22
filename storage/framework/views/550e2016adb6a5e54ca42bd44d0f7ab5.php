@@ -67,6 +67,17 @@
     <div class="flex flex-1 flex-col items-center justify-center overflow-y-auto bg-white px-6 py-12 sm:px-10">
 
         
+        <div class="w-full max-w-md mb-2 flex justify-start">
+            <a href="<?php echo e(route('home')); ?>"
+               class="inline-flex items-center gap-1.5 text-xs font-medium text-slate-400 hover:text-brand-500 transition-colors">
+                <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                </svg>
+                Back to website
+            </a>
+        </div>
+
+        
         <div class="mb-8 lg:hidden">
             <?php echo $__env->make('partials.logo', ['dark' => false], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
         </div>

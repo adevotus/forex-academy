@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -48,6 +47,8 @@ class User extends Authenticatable
         return $this->status === 'approved';
     }
 
+    // ── Relationships ────────────────────────────────────────
+
     public function payments()
     {
         return $this->hasMany(Payment::class);
@@ -82,6 +83,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(MentorshipBooking::class);
     }
+
+    /** Tracked login IPs / devices (max 2 per member). */
+    public function loginSessions()
+    {
+        return $this->hasMany(UserLoginSession::class)->latest('last_seen_at');
+    }
+
+    // ── Helpers ───────────────────────────────────────────────
 
     public function hasActiveSignalSubscription(): bool
     {

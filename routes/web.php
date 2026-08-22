@@ -56,6 +56,7 @@ Route::middleware('auth')->post('logout', [AuthenticatedSessionController::class
 */
 Route::middleware('auth')->prefix('dashboard')->name('member.')->group(function () {
     Route::get('/pending', [PendingController::class, 'show'])->name('pending');
+    Route::post('/pending/proof', [PendingController::class, 'submitProof'])->name('pending.proof');
 
     Route::middleware('member.approved')->group(function () {
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
@@ -88,11 +89,18 @@ Route::middleware('auth')->prefix('dashboard')->name('member.')->group(function 
 */
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/notifications', [AdminDashboardController::class, 'notifications'])->name('notifications');
 
+    // Members
     Route::get('/members', [AdminMemberController::class, 'index'])->name('members.index');
     Route::get('/members/{member}', [AdminMemberController::class, 'show'])->name('members.show');
+    Route::put('/members/{member}', [AdminMemberController::class, 'update'])->name('members.update');
     Route::post('/members/{member}/approve', [AdminMemberController::class, 'approve'])->name('members.approve');
     Route::post('/members/{member}/suspend', [AdminMemberController::class, 'suspend'])->name('members.suspend');
+
+    // Member login sessions
+    Route::delete('/members/{member}/sessions/{session}', [AdminMemberController::class, 'revokeSession'])->name('members.sessions.revoke');
+    Route::delete('/members/{member}/sessions', [AdminMemberController::class, 'clearSessions'])->name('members.sessions.clear');
 
     Route::resource('courses', AdminCourseController::class)->except(['show']);
     Route::get('/courses/{course}/lessons/create', [AdminLessonController::class, 'create'])->name('courses.lessons.create');

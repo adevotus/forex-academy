@@ -34,7 +34,15 @@ class Payment extends Model
 
     public function amountFormatted(): string
     {
-        return '$'.number_format($this->amount / 100, 2);
+        $currency = Setting::get('currency', 'USD');
+        $symbol   = $currency === 'TZS' ? 'TZS ' : '$';
+        return $symbol . number_format($this->amount, 2);
+    }
+
+    public function currencySymbol(): string
+    {
+        $currency = Setting::get('currency', 'USD');
+        return $currency === 'TZS' ? 'TZS ' : '$';
     }
 
     public function typeLabel(): string

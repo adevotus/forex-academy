@@ -15,9 +15,16 @@ use Illuminate\View\View;
 
 class CourseController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
-        $courses = Course::where('published', true)->orderBy('order')->get()->groupBy('level');
+        $query = Course::where('published', true)->orderBy('order');
+
+        if ($request->filled('level')) {
+            $query->where('level', $request->level);
+            $courses = $query->get()->groupBy('level');
+        } else {
+            $courses = $query->get()->groupBy('level');
+        }
 
         return view('member.courses.index', compact('courses'));
     }
@@ -77,13 +84,13 @@ class CourseController extends Controller
             return back();
         }
 
-        $answers = $request->input('answers', []); // [question_id => option_id]
-        $total = $quiz->questions->count();
-        $score = 0;
+        $answers = $request->input('answers', []);
+        $total   = $quiz->questions->count();
+        $score   = 0;
 
         foreach ($quiz->questions as $question) {
             $selected = $answers[$question->id] ?? null;
-            $correct = $question->options->firstWhere('is_correct', true);
+            $correct  = $question->options->firstWhere('is_correct', true);
 
             if ($selected && $correct && (int) $selected === $correct->id) {
                 $score++;
@@ -95,34 +102,51 @@ class CourseController extends Controller
         QuizAttempt::create([
             'user_id' => Auth::id(),
             'quiz_id' => $quiz->id,
-            'score' => $score,
-            'total' => $total,
-            'passed' => $passed,
+            'score'   => $score,
+            'total'   => $total,
+            'passed'  => $passed,
         ]);
 
         return back()->with('quiz_result', ['score' => $score, 'total' => $total, 'passed' => $passed]);
     }
 
-    public function requestUnlock(Course $course): RedirectResponse
+    /**
+     * Submit a course-unlock payment request (with optional proof upload).
+     */
+    public function requestUnlock(Request $request, Course $course): RedirectResponse
     {
+        $request->validate([
+            'proof' => ['nullable', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:5120'],
+        ]);
+
+        // Check for an existing pending (or already-approved) payment
         $existing = Payment::where('user_id', Auth::id())
             ->where('type', 'course')
             ->where('payable_type', Course::class)
             ->where('payable_id', $course->id)
-            ->where('status', 'pending')
-            ->exists();
+            ->whereIn('status', ['pending', 'approved'])
+            ->first();
 
-        if (! $existing) {
-            Payment::create([
-                'user_id' => Auth::id(),
-                'type' => 'course',
-                'payable_type' => Course::class,
-                'payable_id' => $course->id,
-                'amount' => $course->price,
-                'status' => 'pending',
-            ]);
+        if ($existing) {
+            return back()->with('status', 'You already have a pending or approved payment for this course.');
         }
 
-        return back()->with('status', 'Unlock request sent! The Academy admin will confirm your payment shortly.');
+        $proofPath = null;
+        if ($request->hasFile('proof')) {
+            $proofPath = $request->file('proof')->store('proofs', 'public');
+        }
+
+        Payment::create([
+            'user_id'      => Auth::id(),
+            'type'         => 'course',
+            'payable_type' => Course::class,
+            'payable_id'   => $course->id,
+            'amount'       => $course->price,
+            'status'       => 'pending',
+            'proof_path'   => $proofPath,
+            'description'  => 'Unlock: ' . $course->title,
+        ]);
+
+        return back()->with('status', '✓ Payment proof submitted! The admin will review and unlock your course shortly.');
     }
 }

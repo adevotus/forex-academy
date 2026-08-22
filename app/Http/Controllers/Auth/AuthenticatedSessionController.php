@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\UserLoginSession;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,7 +19,7 @@ class AuthenticatedSessionController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $credentials = $request->validate([
-            'email' => ['required', 'string', 'email'],
+            'email'    => ['required', 'string', 'email'],
             'password' => ['required', 'string'],
         ]);
 
@@ -30,7 +31,42 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        $user = Auth::user();
+        $user      = Auth::user();
+        $clientIp  = $request->ip();
+        $userAgent = $request->userAgent();
+
+        // ── IP / device session enforcement (members only) ──────
+        if (! $user->isAdmin()) {
+            $sessions = $user->loginSessions()->get();
+
+            $knownIps = $sessions->pluck('ip_address')->toArray();
+            $isKnown  = in_array($clientIp, $knownIps, true);
+
+            if (! $isKnown && count($knownIps) >= 2) {
+                // Third IP — block login
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+
+                return back()->withErrors([
+                    'email' => 'Login blocked: this account is already registered on 2 devices. '
+                             . 'Please contact support to reset your session.',
+                ])->onlyInput('email');
+            }
+
+            // Upsert the session record (insert or update last_seen_at)
+            $deviceName = UserLoginSession::parseDevice($userAgent);
+
+            UserLoginSession::updateOrCreate(
+                ['user_id' => $user->id, 'ip_address' => $clientIp],
+                [
+                    'user_agent'   => $userAgent,
+                    'device_name'  => $deviceName,
+                    'last_seen_at' => now(),
+                ]
+            );
+        }
+        // ────────────────────────────────────────────────────────
 
         if ($user->isAdmin()) {
             return redirect()->intended(route('admin.dashboard'));
