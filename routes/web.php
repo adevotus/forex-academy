@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\LessonController as AdminLessonController;
 use App\Http\Controllers\Admin\MemberController as AdminMemberController;
 use App\Http\Controllers\Admin\MentorshipController as AdminMentorshipController;
 use App\Http\Controllers\Admin\PaymentController as AdminPaymentController;
+use App\Http\Controllers\Admin\PaymentMethodController as AdminPaymentMethodController;
 use App\Http\Controllers\Admin\PreferencesController as AdminPreferencesController;
 use App\Http\Controllers\Admin\PricingController as AdminPricingController;
 use App\Http\Controllers\Admin\ProfileController as AdminProfileController;
@@ -123,7 +124,13 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('signals', AdminSignalController::class)->except(['show']);
     Route::resource('mentorship', AdminMentorshipController::class)->except(['show']);
 
+    Route::resource('payment-methods', AdminPaymentMethodController::class)->except(['show']);
+    Route::patch('/payment-methods/{paymentMethod}/toggle', [AdminPaymentMethodController::class, 'toggle'])->name('payment-methods.toggle');
+
+    // Payments
     Route::get('/payments', [AdminPaymentController::class, 'index'])->name('payments.index');
+    Route::get('/payments/export', [AdminPaymentController::class, 'export'])->name('payments.export');
+    Route::patch('/payments/{payment}/amount', [AdminPaymentController::class, 'updateAmount'])->name('payments.amount');
     Route::post('/payments/{payment}/approve', [AdminPaymentController::class, 'approve'])->name('payments.approve');
     Route::post('/payments/{payment}/reject', [AdminPaymentController::class, 'reject'])->name('payments.reject');
 
@@ -132,7 +139,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::put('/profile', [AdminProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/password', [AdminProfileController::class, 'updatePassword'])->name('profile.password');
 
-    // Preferences
     // Contact messages
     Route::get('/contact', [AdminContactController::class, 'index'])->name('contact.index');
     Route::get('/contact/{contact}', [AdminContactController::class, 'show'])->name('contact.show');

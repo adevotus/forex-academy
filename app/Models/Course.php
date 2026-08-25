@@ -52,6 +52,6 @@ class Course extends Model
 
     public function priceFormatted(): string
     {
-        return $this->is_free ? 'Free' : '$'.number_format($this->price / 100, 2);
+        return $this->is_free ? 'Free' : '$'.number_format($this->price, 2);
     }
 }

@@ -107,12 +107,12 @@
 
                                 <div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-sm">
                                     <span class="font-bold text-slate-900">{{ $course->priceFormatted() }}</span>
-                                    <span class="flex items-center gap-1 text-slate-400">
-                                        <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.069A1 1 0 0121 8.82V15.18a1 1 0 01-1.447.89L15 14M3 8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z"/>
-                                        </svg>
-                                        {{ $course->lessons()->count() }} lessons
-                                    </span>
+{{--                                    <span class="flex items-center gap-1 text-slate-400">--}}
+{{--                                        <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">--}}
+{{--                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.069A1 1 0 0121 8.82V15.18a1 1 0 01-1.447.89L15 14M3 8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z"/>--}}
+{{--                                        </svg>--}}
+{{--                                        {{ $course->lessons()->count() }} lessons--}}
+{{--                                    </span>--}}
                                 </div>
                             </div>
                         </a>

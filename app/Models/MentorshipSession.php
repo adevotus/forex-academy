@@ -23,6 +23,6 @@ class MentorshipSession extends Model
 
     public function priceFormatted(): string
     {
-        return '$'.number_format($this->price / 100, 2);
+        return '$'.number_format($this->price, 2);
     }
 }
