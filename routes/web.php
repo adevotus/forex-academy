@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Admin\ContactController as AdminContactController;
 use App\Http\Controllers\Admin\CourseController as AdminCourseController;
+use App\Http\Controllers\Admin\TestimonialController as AdminTestimonialController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\LessonController as AdminLessonController;
 use App\Http\Controllers\Admin\MemberController as AdminMemberController;
@@ -20,6 +22,7 @@ use App\Http\Controllers\Member\MentorshipController;
 use App\Http\Controllers\Member\PendingController;
 use App\Http\Controllers\Member\RobotController;
 use App\Http\Controllers\Member\SignalController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\PublicSiteController;
 use Illuminate\Support\Facades\Route;
 
@@ -34,6 +37,9 @@ Route::get('/courses', [PublicSiteController::class, 'courses'])->name('courses.
 Route::get('/courses/{course:slug}', [PublicSiteController::class, 'courseShow'])->name('courses.show');
 Route::get('/robots', [PublicSiteController::class, 'robots'])->name('robots.index');
 Route::get('/pricing', [PublicSiteController::class, 'pricing'])->name('pricing');
+Route::get('/testimonials', [PublicSiteController::class, 'testimonials'])->name('testimonials');
+Route::get('/contact', [ContactController::class, 'show'])->name('contact');
+Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
 
 /*
 |--------------------------------------------------------------------------
@@ -110,6 +116,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::delete('/courses/{course}/lessons/{lesson}', [AdminLessonController::class, 'destroy'])->name('courses.lessons.destroy');
     Route::post('/lessons/video-chunk', [AdminLessonController::class, 'uploadVideoChunk'])->name('lessons.video.chunk');
 
+    Route::resource('testimonials', AdminTestimonialController::class)->except(['show']);
+    Route::patch('/testimonials/{testimonial}/toggle', [AdminTestimonialController::class, 'toggle'])->name('testimonials.toggle');
+
     Route::resource('robots', AdminRobotController::class)->except(['show']);
     Route::resource('signals', AdminSignalController::class)->except(['show']);
     Route::resource('mentorship', AdminMentorshipController::class)->except(['show']);
@@ -124,6 +133,11 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::put('/profile/password', [AdminProfileController::class, 'updatePassword'])->name('profile.password');
 
     // Preferences
+    // Contact messages
+    Route::get('/contact', [AdminContactController::class, 'index'])->name('contact.index');
+    Route::get('/contact/{contact}', [AdminContactController::class, 'show'])->name('contact.show');
+    Route::delete('/contact/{contact}', [AdminContactController::class, 'destroy'])->name('contact.destroy');
+
     Route::get('/preferences', [AdminPreferencesController::class, 'index'])->name('preferences');
     Route::put('/preferences', [AdminPreferencesController::class, 'update'])->name('preferences.update');
 

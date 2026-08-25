@@ -26,6 +26,7 @@
                     <a href="<?php echo e(route('courses.index')); ?>"class="<?php echo e(request()->routeIs('courses.*')  ? 'nav-link-active' : 'nav-link'); ?>">Courses</a>
                     <a href="<?php echo e(route('robots.index')); ?>" class="<?php echo e(request()->routeIs('robots.index')? 'nav-link-active' : 'nav-link'); ?>">Robots</a>
                     <a href="<?php echo e(route('pricing')); ?>"      class="<?php echo e(request()->routeIs('pricing')    ? 'nav-link-active' : 'nav-link'); ?>">Pricing</a>
+                    <a href="<?php echo e(route('contact')); ?>"      class="<?php echo e(request()->routeIs('contact')    ? 'nav-link-active' : 'nav-link'); ?>">Contact</a>
                 </nav>
 
                 
@@ -62,6 +63,7 @@
                     <a href="<?php echo e(route('courses.index')); ?>" class="<?php echo e(request()->routeIs('courses.*')  ? 'nav-link-active' : 'nav-link'); ?>">Courses</a>
                     <a href="<?php echo e(route('robots.index')); ?>"  class="<?php echo e(request()->routeIs('robots.index')? 'nav-link-active' : 'nav-link'); ?>">Robots</a>
                     <a href="<?php echo e(route('pricing')); ?>"       class="<?php echo e(request()->routeIs('pricing')    ? 'nav-link-active' : 'nav-link'); ?>">Pricing</a>
+                    <a href="<?php echo e(route('contact')); ?>"       class="<?php echo e(request()->routeIs('contact')    ? 'nav-link-active' : 'nav-link'); ?>">Contact</a>
                     <?php if(auth()->guard()->guest()): ?>
                         <a href="<?php echo e(route('login')); ?>"    class="nav-link">Log in</a>
                         <a href="<?php echo e(route('register')); ?>" class="btn-primary mt-2 w-full justify-center">Get Started</a>

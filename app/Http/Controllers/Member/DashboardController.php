@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Course;
 use App\Models\LessonProgress;
 use App\Models\Signal;
+use App\Models\Testimonial;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
@@ -34,10 +35,11 @@ class DashboardController extends Controller
         $hasSignals = $user->hasActiveSignalSubscription();
         $latestSignal = $hasSignals ? Signal::latest('published_at')->first() : null;
         $badges = $user->badges()->get();
+        $testimonials = Testimonial::active()->ordered()->take(3)->get();
 
         return view('member.dashboard', compact(
             'user', 'courses', 'unlockedCourseIds', 'completedLessons',
-            'lastProgress', 'activeRobots', 'hasSignals', 'latestSignal', 'badges'
+            'lastProgress', 'activeRobots', 'hasSignals', 'latestSignal', 'badges', 'testimonials'
         ));
     }
 }

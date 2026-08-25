@@ -175,7 +175,7 @@
                     </span>
                     <h2 class="section-title">Built for traders who want real results</h2>
                     <p class="mt-4 text-base leading-relaxed text-slate-500">
-                        We don't just sell courses — we provide a complete, end-to-end ecosystem that takes you from beginner to confident, tech-enabled trader.
+                        We don't just sell courses  we provide a complete, end to end ecosystem that takes you from beginner to confident, tech-enabled trader.
                     </p>
                     <div class="mt-8 space-y-5">
                         @foreach ([
@@ -232,7 +232,7 @@
                     </div>
                     <div class="absolute -right-4 bottom-6 w-52 rotate-[3deg] card p-4 shadow-card">
                         <p class="text-xs font-semibold text-slate-500">Signal Alert</p>
-                        <p class="mt-1 text-sm font-bold text-slate-900">EURUSD — Buy Setup</p>
+                        <p class="mt-1 text-sm font-bold text-slate-900">EURUSD  Buy Setup</p>
                         <div class="mt-2 flex gap-3 text-xs">
                             <span class="text-emerald-600">TP 1.0920</span>
                             <span class="text-rose-500">SL 1.0840</span>
@@ -244,20 +244,129 @@
     </section>
 
     {{-- ═══════════════════════════════════════════════════
+         TESTIMONIALS
+    ═══════════════════════════════════════════════════ --}}
+    @if($testimonials->isNotEmpty())
+    <section class="bg-navy-950 px-4 py-24 sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-7xl">
+
+            {{-- Header --}}
+            <div class="flex flex-wrap items-end justify-between gap-4">
+                <div class="mx-auto max-w-xl text-center lg:mx-0 lg:text-left">
+                    <span class="badge border-white/15 bg-white/10 text-slate-300 mb-4 inline-flex">
+                        <svg class="h-3.5 w-3.5 text-gold-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        Member Stories
+                    </span>
+                    <h2 class="text-3xl font-extrabold text-white sm:text-4xl">What our traders say</h2>
+                    <p class="mt-3 text-base text-slate-400">Real results from real members of EMMIOXFOREX ACADEMY.</p>
+                </div>
+                <a href="{{ route('testimonials') }}"
+                   class="inline-flex items-center gap-1.5 text-sm font-semibold text-gold-400 hover:text-gold-300 transition">
+                    View all stories
+                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                </a>
+            </div>
+
+            {{-- 3-column grid — always 3 on desktop --}}
+            <div class="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                @foreach($testimonials->take(3) as $t)
+                    <div class="flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm transition hover:border-white/25 hover:bg-white/8">
+
+                        {{-- ── Media (16:9 aspect ratio box) ── --}}
+                        @if($t->media_path)
+                            <div class="relative w-full overflow-hidden" style="aspect-ratio:16/9; background:#0a0f1e">
+                                @if($t->isVideo())
+                                    <video src="{{ $t->mediaUrl() }}"
+                                           controls preload="metadata"
+                                           class="absolute inset-0 h-full w-full object-contain"></video>
+                                @else
+                                    <img src="{{ $t->mediaUrl() }}" alt="{{ $t->name }}"
+                                         class="absolute inset-0 h-full w-full object-cover transition duration-300 hover:scale-105">
+                                @endif
+                            </div>
+                        @else
+                            {{-- Decorative placeholder --}}
+                            <div class="flex items-center justify-center bg-gradient-to-br from-brand-900/50 to-navy-900/80" style="aspect-ratio:16/9">
+                                <svg class="h-12 w-12 text-white/10" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+                            </div>
+                        @endif
+
+                        {{-- ── Content ── --}}
+                        <div class="flex flex-1 flex-col p-6">
+
+                            {{-- Stars --}}
+                            @if($t->rating)
+                                <div class="flex gap-0.5 mb-4">
+                                    @for($i = 1; $i <= 5; $i++)
+                                        <svg class="h-4 w-4 {{ $i <= $t->rating ? 'text-gold-400' : 'text-white/15' }}"
+                                             fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                        </svg>
+                                    @endfor
+                                </div>
+                            @endif
+
+                            {{-- Opening quote mark --}}
+                            <svg class="h-6 w-6 text-brand-500/40 mb-2 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+                            </svg>
+
+                            {{-- Quote text --}}
+                            <blockquote class="flex-1 text-sm leading-relaxed text-slate-300 line-clamp-4">
+                                {{ $t->content }}
+                            </blockquote>
+
+                            {{-- Person --}}
+                            <div class="mt-5 flex items-center gap-3 border-t border-white/10 pt-4">
+                                @if($t->isImage() && $t->media_path)
+                                    <img src="{{ $t->mediaUrl() }}" alt="{{ $t->name }}"
+                                         class="h-10 w-10 flex-shrink-0 rounded-full object-cover ring-2 ring-white/20">
+                                @else
+                                    <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-brand-600/20 text-sm font-bold text-brand-300 ring-2 ring-brand-500/20">
+                                        {{ $t->initial() }}
+                                    </div>
+                                @endif
+                                <div>
+                                    <p class="text-sm font-semibold text-white">{{ $t->name }}</p>
+                                    @if($t->role)
+                                        <p class="text-xs text-slate-400">{{ $t->role }}</p>
+                                    @endif
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+
+            {{-- View all link (centered, below cards) --}}
+            @if($testimonials->count() > 3)
+            <div class="mt-10 text-center">
+                <a href="{{ route('testimonials') }}"
+                   class="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-6 py-3 text-sm font-semibold text-slate-300 transition hover:bg-white/10 hover:text-white">
+                    Read all {{ $testimonials->count() }} member stories
+                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                </a>
+            </div>
+            @endif
+
+        </div>
+    </section>
+    @endif
+
+    {{-- ═══════════════════════════════════════════════════
          CTA
     ═══════════════════════════════════════════════════ --}}
-    <section class="px-4 pb-28 sm:px-6 lg:px-8">
+    <section class="px-4 pb-28 sm:px-6 lg:px-8 mt-3">
         <div class="mx-auto max-w-5xl overflow-hidden rounded-3xl bg-gradient-to-br from-navy-950 via-navy-900 to-brand-900 px-10 py-16 text-center shadow-glow sm:px-16">
             <div class="pointer-events-none absolute inset-0 bg-grid-glow opacity-60"></div>
             <span class="badge border-white/15 bg-white/10 text-slate-300 mx-auto mb-4">
                 <svg class="h-3.5 w-3.5 text-gold-400" fill="currentColor" viewBox="0 0 24 24"><path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 0 0 .95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 0 0-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 0 0-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 0 0-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 0 0 .951-.69l1.519-4.674z"/></svg>
                 Join Today
             </span>
-            <h2 class="relative text-3xl font-extrabold text-white sm:text-4xl">
-                Ready to start your<br>trading journey?
-            </h2>
+            <h2 class="relative text-3xl font-extrabold text-white sm:text-4xl">Ready to start your<br>trading journey?</h2>
             <p class="relative mx-auto mt-4 max-w-xl text-base text-slate-400">
-                Register today, get approved, and unlock a structured path from Starter to Pro — with robots, signals and mentorship along the way.
+                Register today, get approved, and unlock a structured path from Starter to Pro with robots, signals and mentorship along the way.
             </p>
             <div class="relative mt-10 flex flex-wrap items-center justify-center gap-4">
                 <a href="{{ route('register') }}" class="btn-gold px-8 py-3 text-base">Join EMMIOXFOREX ACADEMY</a>

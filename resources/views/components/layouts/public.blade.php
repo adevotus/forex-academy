@@ -17,6 +17,7 @@
                     <a href="{{ route('courses.index') }}"class="{{ request()->routeIs('courses.*')  ? 'nav-link-active' : 'nav-link' }}">Courses</a>
                     <a href="{{ route('robots.index') }}" class="{{ request()->routeIs('robots.index')? 'nav-link-active' : 'nav-link' }}">Robots</a>
                     <a href="{{ route('pricing') }}"      class="{{ request()->routeIs('pricing')    ? 'nav-link-active' : 'nav-link' }}">Pricing</a>
+                    <a href="{{ route('contact') }}"      class="{{ request()->routeIs('contact')    ? 'nav-link-active' : 'nav-link' }}">Contact</a>
                 </nav>
 
                 {{-- Auth buttons --}}
@@ -53,6 +54,7 @@
                     <a href="{{ route('courses.index') }}" class="{{ request()->routeIs('courses.*')  ? 'nav-link-active' : 'nav-link' }}">Courses</a>
                     <a href="{{ route('robots.index') }}"  class="{{ request()->routeIs('robots.index')? 'nav-link-active' : 'nav-link' }}">Robots</a>
                     <a href="{{ route('pricing') }}"       class="{{ request()->routeIs('pricing')    ? 'nav-link-active' : 'nav-link' }}">Pricing</a>
+                    <a href="{{ route('contact') }}"       class="{{ request()->routeIs('contact')    ? 'nav-link-active' : 'nav-link' }}">Contact</a>
                     @guest
                         <a href="{{ route('login') }}"    class="nav-link">Log in</a>
                         <a href="{{ route('register') }}" class="btn-primary mt-2 w-full justify-center">Get Started</a>

@@ -160,4 +160,51 @@
             </div>
         </div>
     </div>
+
+    {{-- ── Member Testimonials strip ── --}}
+    @if(isset($testimonials) && $testimonials->isNotEmpty())
+    <div class="mt-10">
+        <div class="mb-4 flex items-center justify-between">
+            <h2 class="font-bold text-slate-900">What members are saying</h2>
+            <span class="text-xs text-slate-400">From our community</span>
+        </div>
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            @foreach($testimonials->take(3) as $t)
+                <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm flex gap-4">
+                    {{-- Avatar --}}
+                    @if($t->isImage() && $t->media_path)
+                        <img src="{{ $t->mediaUrl() }}" alt="{{ $t->name }}"
+                             class="h-11 w-11 flex-shrink-0 rounded-full object-cover ring-2 ring-brand-100">
+                    @elseif($t->isVideo() && $t->media_path)
+                        <video src="{{ $t->mediaUrl() }}"
+                               class="h-11 w-11 flex-shrink-0 rounded-full object-cover bg-slate-900"
+                               muted playsinline loop autoplay></video>
+                    @else
+                        <div class="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-brand-50 text-sm font-bold text-brand-600 ring-2 ring-brand-100">
+                            {{ $t->initial() }}
+                        </div>
+                    @endif
+
+                    <div class="min-w-0">
+                        {{-- Stars --}}
+                        @if($t->rating)
+                            <div class="flex gap-px mb-1">
+                                @for($i = 1; $i <= 5; $i++)
+                                    <svg class="h-3 w-3 {{ $i <= $t->rating ? 'text-gold-400' : 'text-slate-200' }}"
+                                         fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                    </svg>
+                                @endfor
+                            </div>
+                        @endif
+                        <p class="text-xs leading-relaxed text-slate-600 line-clamp-3 italic">"{{ $t->content }}"</p>
+                        <p class="mt-2 text-xs font-semibold text-slate-900">{{ $t->name }}
+                            @if($t->role)<span class="font-normal text-slate-400"> · {{ $t->role }}</span>@endif
+                        </p>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </div>
+    @endif
 </x-layouts.member>

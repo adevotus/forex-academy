@@ -61,7 +61,6 @@
             </div>
         </div>
 
-        
         <div class="mx-auto max-w-7xl mt-2">
             <p id="results-count" class="text-xs text-slate-400 hidden"></p>
         </div>
@@ -69,50 +68,11 @@
 
     
     <section class="px-4 py-16 sm:px-6 lg:px-8">
-        <div class="mx-auto max-w-7xl" id="courses-container">
+        <div class="mx-auto max-w-7xl">
 
-            <?php $__empty_1 = true; $__currentLoopData = $courses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $level => $group): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
-                <div class="level-section mt-10 first:mt-0" data-level="<?php echo e($level); ?>">
-                    
-                    <div class="flex items-center gap-4">
-                        <span class="badge badge-level-<?php echo e($level); ?>"><?php echo e(ucfirst($level)); ?></span>
-                        <div class="h-px flex-1 bg-slate-200"></div>
-                        <span class="level-count text-xs text-slate-400 font-medium"><?php echo e($group->count()); ?> <?php echo e(Str::plural('course', $group->count())); ?></span>
-                    </div>
+            <?php $allCourses = $courses->flatten(); ?>
 
-                    <div class="course-grid mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                        <?php $__currentLoopData = $group; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $course): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                            <a href="<?php echo e(route('courses.show', $course)); ?>"
-                               class="course-card card-hover group flex flex-col p-6 transition"
-                               data-title="<?php echo e(strtolower($course->title)); ?>"
-                               data-desc="<?php echo e(strtolower($course->description)); ?>">
-                                <?php if($course->cover_image): ?>
-                                    <img src="<?php echo e(asset('storage/'.$course->cover_image)); ?>"
-                                         alt="<?php echo e($course->title); ?>"
-                                         class="mb-4 h-36 w-full rounded-xl object-cover ring-1 ring-slate-100">
-                                <?php else: ?>
-                                    <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-brand-50 ring-1 ring-brand-200 transition group-hover:bg-brand-100">
-                                        <svg class="h-5 w-5 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
-                                        </svg>
-                                    </div>
-                                <?php endif; ?>
-                                <h3 class="font-bold text-slate-900 transition group-hover:text-brand-600"><?php echo e($course->title); ?></h3>
-                                <p class="mt-2 flex-1 line-clamp-3 text-sm leading-relaxed text-slate-500"><?php echo e($course->description); ?></p>
-                                <div class="mt-5 flex items-center justify-between border-t border-slate-100 pt-4 text-sm">
-                                    <span class="font-bold text-slate-900"><?php echo e($course->priceFormatted()); ?></span>
-                                    <span class="text-slate-400"><?php echo e($course->lessons()->count()); ?> lessons</span>
-                                </div>
-                            </a>
-                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                    </div>
-
-                    
-                    <div class="level-empty hidden mt-6 rounded-2xl border border-dashed border-slate-200 py-10 text-center text-sm text-slate-400">
-                        No <?php echo e(ucfirst($level)); ?> courses match your search.
-                    </div>
-                </div>
-            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+            <?php if($allCourses->isEmpty()): ?>
                 <div class="py-24 text-center">
                     <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-100">
                         <svg class="h-8 w-8 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
@@ -122,18 +82,64 @@
                     <p class="mt-4 text-base font-semibold text-slate-700">Courses are being prepared</p>
                     <p class="mt-2 text-sm text-slate-500">Check back soon — we're building great content for you.</p>
                 </div>
-            <?php endif; ?>
+            <?php else: ?>
+                <div id="course-grid" class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                    <?php $__currentLoopData = $allCourses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $course): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <a href="<?php echo e(route('courses.show', $course)); ?>"
+                           class="course-card card-hover group flex flex-col transition"
+                           data-level="<?php echo e($course->level); ?>"
+                           data-title="<?php echo e(strtolower($course->title)); ?>"
+                           data-desc="<?php echo e(strtolower($course->description)); ?>">
 
-            
-            <div id="no-results" class="hidden py-24 text-center">
-                <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-100">
-                    <svg class="h-8 w-8 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                        <circle cx="11" cy="11" r="8"/><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35"/>
-                    </svg>
+                            
+                            <?php if($course->cover_image): ?>
+                                <img src="<?php echo e(asset('storage/'.$course->cover_image)); ?>"
+                                     alt="<?php echo e($course->title); ?>"
+                                     class="h-44 w-full rounded-t-2xl object-cover">
+                                <div class="flex flex-col flex-1 p-5">
+                            <?php else: ?>
+                                <div class="flex h-44 w-full items-center justify-center rounded-t-2xl bg-brand-50">
+                                    <svg class="h-12 w-12 text-brand-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                                    </svg>
+                                </div>
+                                <div class="flex flex-col flex-1 p-5">
+                            <?php endif; ?>
+
+                                
+                                <span class="inline-flex self-start items-center px-2.5 py-0.5 rounded-full text-xs font-semibold mb-3 badge-level-<?php echo e($course->level); ?>">
+                                    <?php echo e(ucfirst($course->level)); ?>
+
+                                </span>
+
+                                <h3 class="font-bold text-slate-900 transition group-hover:text-brand-600 leading-snug"><?php echo e($course->title); ?></h3>
+                                <p class="mt-2 flex-1 line-clamp-2 text-sm leading-relaxed text-slate-500"><?php echo e($course->description); ?></p>
+
+                                <div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-sm">
+                                    <span class="font-bold text-slate-900"><?php echo e($course->priceFormatted()); ?></span>
+                                    <span class="flex items-center gap-1 text-slate-400">
+                                        <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.069A1 1 0 0121 8.82V15.18a1 1 0 01-1.447.89L15 14M3 8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z"/>
+                                        </svg>
+                                        <?php echo e($course->lessons()->count()); ?> lessons
+                                    </span>
+                                </div>
+                            </div>
+                        </a>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </div>
-                <p class="mt-4 text-base font-semibold text-slate-700">No courses found</p>
-                <p class="mt-2 text-sm text-slate-500">Try a different keyword or level.</p>
-            </div>
+
+                
+                <div id="no-results" class="hidden py-24 text-center">
+                    <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-100">
+                        <svg class="h-8 w-8 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                            <circle cx="11" cy="11" r="8"/><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35"/>
+                        </svg>
+                    </div>
+                    <p class="mt-4 text-base font-semibold text-slate-700">No courses found</p>
+                    <p class="mt-2 text-sm text-slate-500">Try a different keyword or filter.</p>
+                </div>
+            <?php endif; ?>
 
         </div>
     </section>
@@ -146,68 +152,41 @@
 
 <script>
 (function () {
-    const filterBtns   = document.querySelectorAll('.filter-btn');
-    const searchInput  = document.getElementById('course-search');
-    const levelSections = document.querySelectorAll('.level-section');
-    const noResults    = document.getElementById('no-results');
-    const countEl      = document.getElementById('results-count');
+    const filterBtns  = document.querySelectorAll('.filter-btn');
+    const searchInput = document.getElementById('course-search');
+    const cards       = document.querySelectorAll('.course-card');
+    const noResults   = document.getElementById('no-results');
+    const countEl     = document.getElementById('results-count');
 
     let activeLevel = 'all';
     let searchQuery = '';
 
     function applyFilters() {
-        let totalVisible = 0;
+        let visible = 0;
 
-        levelSections.forEach(section => {
-            const level = section.dataset.level;
+        cards.forEach(card => {
+            const levelMatch = activeLevel === 'all' || card.dataset.level === activeLevel;
+            const textMatch  = !searchQuery
+                || (card.dataset.title || '').includes(searchQuery)
+                || (card.dataset.desc  || '').includes(searchQuery);
 
-            // Check level visibility
-            const levelMatch = activeLevel === 'all' || activeLevel === level;
-
-            if (!levelMatch) {
-                section.style.display = 'none';
-                return;
-            }
-            section.style.display = '';
-
-            // Filter cards within this section
-            const cards = section.querySelectorAll('.course-card');
-            const emptyState = section.querySelector('.level-empty');
-            const grid = section.querySelector('.course-grid');
-            let visibleInSection = 0;
-
-            cards.forEach(card => {
-                const title = card.dataset.title || '';
-                const desc  = card.dataset.desc  || '';
-                const textMatch = !searchQuery || title.includes(searchQuery) || desc.includes(searchQuery);
-                if (textMatch) {
-                    card.style.display = '';
-                    visibleInSection++;
-                    totalVisible++;
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-
-            // Show/hide level empty state
-            if (visibleInSection === 0) {
-                grid.style.display = 'none';
-                emptyState.classList.remove('hidden');
+            if (levelMatch && textMatch) {
+                card.style.display = '';
+                visible++;
             } else {
-                grid.style.display = '';
-                emptyState.classList.add('hidden');
+                card.style.display = 'none';
             }
         });
 
-        // Global no-results
-        noResults.classList.toggle('hidden', totalVisible > 0 || !searchQuery);
+        if (noResults) noResults.classList.toggle('hidden', visible > 0);
 
-        // Count display
-        if (searchQuery || activeLevel !== 'all') {
-            countEl.textContent = totalVisible + ' course' + (totalVisible !== 1 ? 's' : '') + ' found';
-            countEl.classList.remove('hidden');
-        } else {
-            countEl.classList.add('hidden');
+        if (countEl) {
+            if (searchQuery || activeLevel !== 'all') {
+                countEl.textContent = visible + ' course' + (visible !== 1 ? 's' : '') + ' found';
+                countEl.classList.remove('hidden');
+            } else {
+                countEl.classList.add('hidden');
+            }
         }
     }
 
@@ -220,10 +199,12 @@
         });
     });
 
-    searchInput.addEventListener('input', () => {
-        searchQuery = searchInput.value.trim().toLowerCase();
-        applyFilters();
-    });
+    if (searchInput) {
+        searchInput.addEventListener('input', () => {
+            searchQuery = searchInput.value.trim().toLowerCase();
+            applyFilters();
+        });
+    }
 })();
 </script>
 
