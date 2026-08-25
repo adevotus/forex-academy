@@ -1,13 +1,22 @@
-<x-layouts.member title="Signals">
-    <x-slot name="header">
+<?php if (isset($component)) { $__componentOriginal131d2de898a1503a92a84eccccfb5c3d = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal131d2de898a1503a92a84eccccfb5c3d = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.layouts.member','data' => ['title' => 'Signals']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('layouts.member'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['title' => 'Signals']); ?>
+     <?php $__env->slot('header', null, []); ?> 
         <div>
             <h1 class="text-2xl font-bold text-slate-900">Trading Signals</h1>
             <p class="mt-1 text-sm text-slate-500">Market setups with entry, stop-loss and take-profit — plus the reasoning behind each call.</p>
         </div>
-    </x-slot>
+     <?php $__env->endSlot(); ?>
 
-    @if (! $hasSignals)
-        {{-- Locked state --}}
+    <?php if(! $hasSignals): ?>
+        
         <div class="rounded-2xl border border-amber-200 bg-amber-50 p-6 shadow-sm">
             <div class="flex flex-wrap items-center justify-between gap-4">
                 <div class="flex items-center gap-4">
@@ -16,7 +25,7 @@
                     </div>
                     <div>
                         <p class="font-bold text-slate-900">Unlock the 3-Month Signal Subscription</p>
-                        <p class="mt-0.5 text-sm text-slate-600">{{ $currency }} {{ $signalPrice }} — includes an explainer with every signal we publish.</p>
+                        <p class="mt-0.5 text-sm text-slate-600"><?php echo e($currency); ?> <?php echo e($signalPrice); ?> — includes an explainer with every signal we publish.</p>
                     </div>
                 </div>
                 <button onclick="openSignalModal()"
@@ -27,14 +36,14 @@
             </div>
         </div>
 
-        {{-- ── Signal Unlock Modal ── --}}
+        
         <div id="signal-unlock-modal"
              class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/60 p-4 backdrop-blur-sm"
              onclick="if(event.target===this) closeSignalModal()">
 
             <div class="w-full max-w-4xl overflow-hidden rounded-2xl bg-white shadow-2xl">
 
-                {{-- Header --}}
+                
                 <div class="flex items-center justify-between border-b border-slate-100 px-6 py-4">
                     <div class="flex items-center gap-3">
                         <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-50">
@@ -42,7 +51,7 @@
                         </div>
                         <div>
                             <h3 class="font-bold text-slate-900 leading-tight">Unlock Trading Signals</h3>
-                            <p class="text-xs text-slate-500">3-Month Subscription · {{ $currency }} {{ $signalPrice }}</p>
+                            <p class="text-xs text-slate-500">3-Month Subscription · <?php echo e($currency); ?> <?php echo e($signalPrice); ?></p>
                         </div>
                     </div>
                     <button onclick="closeSignalModal()" class="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition">
@@ -50,29 +59,29 @@
                     </button>
                 </div>
 
-                {{-- Two-column body --}}
+                
                 <div class="flex flex-col sm:flex-row divide-y sm:divide-y-0 sm:divide-x divide-slate-100">
 
-                    {{-- LEFT — Payment methods --}}
+                    
                     <div class="flex flex-col gap-4 bg-slate-50 p-5 sm:w-96 sm:flex-shrink-0 overflow-y-auto" style="max-height:80vh">
 
-                        {{-- Amount --}}
+                        
                         <div class="flex items-center gap-3 rounded-xl border border-amber-100 bg-white px-4 py-3 shadow-sm">
                             <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-amber-500">
                                 <svg class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                             </div>
                             <div>
                                 <p class="text-[10px] font-medium uppercase tracking-wide text-slate-400">Amount Due</p>
-                                <p class="text-xl font-extrabold text-slate-900">{{ $currency }} {{ $signalPrice }}</p>
+                                <p class="text-xl font-extrabold text-slate-900"><?php echo e($currency); ?> <?php echo e($signalPrice); ?></p>
                             </div>
                         </div>
 
-                        {{-- Payment methods --}}
+                        
                         <div class="space-y-3">
                             <p class="text-[10px] font-semibold uppercase tracking-widest text-slate-400">How to Pay</p>
 
-                            @forelse($paymentMethods as $method)
-                                @php
+                            <?php $__empty_1 = true; $__currentLoopData = $paymentMethods; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $method): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                                <?php
                                     $filledDetails = collect($method->details ?? [])->filter(fn($d) => !empty($d['label'] ?? '') || !empty($d['value'] ?? ''))->values();
                                     $headerBg = match($method->icon_color) {
                                         'emerald' => 'bg-emerald-50 border-emerald-100',
@@ -88,30 +97,31 @@
                                         'purple'  => 'bg-purple-600',
                                         default   => 'bg-slate-700',
                                     };
-                                @endphp
+                                ?>
                                 <div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-                                    <div class="flex items-center gap-2 border-b px-3.5 py-2.5 {{ $headerBg }}">
-                                        <div class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-lg text-xs font-extrabold text-white {{ $iconBg }}">
-                                            {{ $method->typeIcon() }}
+                                    <div class="flex items-center gap-2 border-b px-3.5 py-2.5 <?php echo e($headerBg); ?>">
+                                        <div class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-lg text-xs font-extrabold text-white <?php echo e($iconBg); ?>">
+                                            <?php echo e($method->typeIcon()); ?>
+
                                         </div>
                                         <div class="min-w-0">
-                                            <span class="block text-xs font-bold text-slate-800">{{ $method->name }}</span>
-                                            @if($method->subtitle)
-                                                <span class="text-[10px] text-slate-500">{{ $method->subtitle }}</span>
-                                            @endif
+                                            <span class="block text-xs font-bold text-slate-800"><?php echo e($method->name); ?></span>
+                                            <?php if($method->subtitle): ?>
+                                                <span class="text-[10px] text-slate-500"><?php echo e($method->subtitle); ?></span>
+                                            <?php endif; ?>
                                         </div>
                                     </div>
-                                    @if($filledDetails->isNotEmpty())
+                                    <?php if($filledDetails->isNotEmpty()): ?>
                                         <div class="divide-y divide-slate-100 px-3.5 py-1">
-                                            @foreach($filledDetails as $detail)
-                                                @php $val = $detail['value'] ?: '—'; @endphp
+                                            <?php $__currentLoopData = $filledDetails; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $detail): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                <?php $val = $detail['value'] ?: '—'; ?>
                                                 <div class="py-2.5">
-                                                    <span class="block text-[10px] font-medium uppercase tracking-wide text-slate-400 mb-1">{{ $detail['label'] ?? '' }}</span>
+                                                    <span class="block text-[10px] font-medium uppercase tracking-wide text-slate-400 mb-1"><?php echo e($detail['label'] ?? ''); ?></span>
                                                     <div class="flex items-center gap-2">
-                                                        <span class="font-mono text-[12px] font-semibold text-slate-800 select-all break-all leading-snug flex-1">{{ $val }}</span>
-                                                        @if($val !== '—')
+                                                        <span class="font-mono text-[12px] font-semibold text-slate-800 select-all break-all leading-snug flex-1"><?php echo e($val); ?></span>
+                                                        <?php if($val !== '—'): ?>
                                                             <button type="button"
-                                                                    onclick="copyValue(this, {{ json_encode($val) }})"
+                                                                    onclick="copyValue(this, <?php echo e(json_encode($val)); ?>)"
                                                                     title="Copy to clipboard"
                                                                     class="copy-btn flex-shrink-0 flex items-center gap-1 px-2 py-1 rounded-lg border border-slate-200 bg-slate-50 hover:bg-emerald-50 hover:border-emerald-300 text-slate-500 hover:text-emerald-600 transition text-[10px] font-medium whitespace-nowrap">
                                                                 <svg class="copy-icon h-3.5 w-3.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -122,23 +132,23 @@
                                                                 </svg>
                                                                 <span class="copy-label">Copy</span>
                                                             </button>
-                                                        @endif
+                                                        <?php endif; ?>
                                                     </div>
                                                 </div>
-                                            @endforeach
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                         </div>
-                                    @else
+                                    <?php else: ?>
                                         <p class="px-3.5 py-2.5 text-[11px] italic text-slate-400">Contact admin for details.</p>
-                                    @endif
-                                    @if($method->note)
-                                        <p class="border-t border-slate-50 px-3.5 pb-2.5 pt-2 text-[10px] text-slate-400">{{ $method->note }}</p>
-                                    @endif
+                                    <?php endif; ?>
+                                    <?php if($method->note): ?>
+                                        <p class="border-t border-slate-50 px-3.5 pb-2.5 pt-2 text-[10px] text-slate-400"><?php echo e($method->note); ?></p>
+                                    <?php endif; ?>
                                 </div>
-                            @empty
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                                 <div class="rounded-xl border border-dashed border-slate-200 bg-white p-4 text-center">
                                     <p class="text-xs text-slate-400">No payment methods configured yet.</p>
                                 </div>
-                            @endforelse
+                            <?php endif; ?>
                         </div>
 
                         <p class="text-[10px] leading-relaxed text-slate-400">
@@ -146,10 +156,10 @@
                         </p>
                     </div>
 
-                    {{-- RIGHT — Upload proof form --}}
-                    <form method="POST" action="{{ route('member.signals.unlock') }}" enctype="multipart/form-data"
+                    
+                    <form method="POST" action="<?php echo e(route('member.signals.unlock')); ?>" enctype="multipart/form-data"
                           class="flex flex-1 flex-col p-6">
-                        @csrf
+                        <?php echo csrf_field(); ?>
 
                         <h4 class="mb-4 text-sm font-bold text-slate-800">Upload Payment Proof</h4>
 
@@ -198,43 +208,45 @@
             </div>
         </div>
 
-    @else
-        {{-- Active subscription --}}
+    <?php else: ?>
+        
         <div class="mb-6 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700 font-medium">
-            ✓ Active until {{ $subscription?->expires_at?->format('M d, Y') }}
+            ✓ Active until <?php echo e($subscription?->expires_at?->format('M d, Y')); ?>
+
         </div>
 
         <div class="space-y-4">
-            @foreach ($signals as $signal)
+            <?php $__currentLoopData = $signals; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $signal): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
                     <div class="flex flex-wrap items-center justify-between gap-3">
                         <div class="flex items-center gap-3">
-                            <span class="inline-flex items-center rounded-lg border px-2.5 py-0.5 text-xs font-bold {{ $signal->direction === 'buy' ? 'border-emerald-200 bg-emerald-50 text-emerald-700' : 'border-rose-200 bg-rose-50 text-rose-700' }}">
-                                {{ strtoupper($signal->direction) }}
+                            <span class="inline-flex items-center rounded-lg border px-2.5 py-0.5 text-xs font-bold <?php echo e($signal->direction === 'buy' ? 'border-emerald-200 bg-emerald-50 text-emerald-700' : 'border-rose-200 bg-rose-50 text-rose-700'); ?>">
+                                <?php echo e(strtoupper($signal->direction)); ?>
+
                             </span>
-                            <span class="font-semibold text-slate-900">{{ $signal->pair }}</span>
+                            <span class="font-semibold text-slate-900"><?php echo e($signal->pair); ?></span>
                         </div>
-                        <span class="text-xs text-slate-400">{{ $signal->published_at?->diffForHumans() }}</span>
+                        <span class="text-xs text-slate-400"><?php echo e($signal->published_at?->diffForHumans()); ?></span>
                     </div>
                     <div class="mt-4 grid grid-cols-3 gap-3 text-center text-sm">
                         <div class="rounded-lg bg-slate-50 py-2.5">
                             <p class="text-xs text-slate-400">Entry</p>
-                            <p class="font-semibold text-slate-900">{{ $signal->entry_price }}</p>
+                            <p class="font-semibold text-slate-900"><?php echo e($signal->entry_price); ?></p>
                         </div>
                         <div class="rounded-lg bg-rose-50 py-2.5">
                             <p class="text-xs text-slate-400">Stop Loss</p>
-                            <p class="font-semibold text-rose-600">{{ $signal->stop_loss }}</p>
+                            <p class="font-semibold text-rose-600"><?php echo e($signal->stop_loss); ?></p>
                         </div>
                         <div class="rounded-lg bg-emerald-50 py-2.5">
                             <p class="text-xs text-slate-400">Take Profit</p>
-                            <p class="font-semibold text-emerald-600">{{ $signal->take_profit }}</p>
+                            <p class="font-semibold text-emerald-600"><?php echo e($signal->take_profit); ?></p>
                         </div>
                     </div>
-                    <p class="mt-4 text-sm leading-relaxed text-slate-500">{{ $signal->explainer }}</p>
+                    <p class="mt-4 text-sm leading-relaxed text-slate-500"><?php echo e($signal->explainer); ?></p>
                 </div>
-            @endforeach
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         </div>
-    @endif
+    <?php endif; ?>
 
     <script>
     function openSignalModal() {
@@ -291,4 +303,14 @@
         document.body.removeChild(ta);
     }
     </script>
-</x-layouts.member>
+ <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal131d2de898a1503a92a84eccccfb5c3d)): ?>
+<?php $attributes = $__attributesOriginal131d2de898a1503a92a84eccccfb5c3d; ?>
+<?php unset($__attributesOriginal131d2de898a1503a92a84eccccfb5c3d); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal131d2de898a1503a92a84eccccfb5c3d)): ?>
+<?php $component = $__componentOriginal131d2de898a1503a92a84eccccfb5c3d; ?>
+<?php unset($__componentOriginal131d2de898a1503a92a84eccccfb5c3d); ?>
+<?php endif; ?>
+<?php /**PATH D:\projects\emmiox-academy\emmiox-academy\resources\views/member/signals/index.blade.php ENDPATH**/ ?>

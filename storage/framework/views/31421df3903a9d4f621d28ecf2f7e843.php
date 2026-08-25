@@ -1,4 +1,13 @@
-<x-layouts.public title="Contact Us — EMMIOXFOREX ACADEMY">
+<?php if (isset($component)) { $__componentOriginal8c0e86a062c1c5bb6d0e151b7076f3fd = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal8c0e86a062c1c5bb6d0e151b7076f3fd = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.layouts.public','data' => ['title' => 'Contact Us — EMMIOXFOREX ACADEMY']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('layouts.public'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['title' => 'Contact Us — EMMIOXFOREX ACADEMY']); ?>
     <section class="border-b border-slate-200 bg-slate-50 px-4 py-20 sm:px-6 lg:px-8">
         <div class="mx-auto max-w-2xl text-center">
             <span class="badge mx-auto"> Get In Touch</span>
@@ -12,12 +21,12 @@
         </div>
     </section>
 
-    {{-- ── Contact Details Strip ── --}}
+    
     <section class="bg-white px-4 py-12 sm:px-6 lg:px-8 border-b border-slate-100">
         <div class="mx-auto max-w-7xl">
             <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
 
-                {{-- Phone --}}
+                
                 <div class="flex items-start gap-4">
                     <div class="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand-600">
                         <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -31,7 +40,7 @@
                     </div>
                 </div>
 
-                {{-- Email --}}
+                
                 <div class="flex items-start gap-4">
                     <div class="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand-600">
                         <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -45,7 +54,7 @@
                     </div>
                 </div>
 
-                {{-- Telegram --}}
+                
                 <div class="flex items-start gap-4">
                     <div class="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-green-50 text-green-600">
                         <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
@@ -59,7 +68,7 @@
                     </div>
                 </div>
 
-                {{-- Location --}}
+                
                 <div class="flex items-start gap-4">
                     <div class="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand-600">
                         <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -77,15 +86,15 @@
         </div>
     </section>
 
-    {{-- ── Main content ── --}}
+    
     <section class="bg-slate-50 px-4 py-20 sm:px-6 lg:px-8">
         <div class="mx-auto max-w-7xl">
             <div class="grid grid-cols-1 gap-10 lg:grid-cols-3">
 
-                {{-- ── Left: Social + FAQ ── --}}
+                
                 <div class="flex flex-col gap-6">
 
-                    {{-- Follow us --}}
+                    
                     <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
                         <h3 class="text-sm font-bold text-slate-900 mb-4">Follow Us</h3>
                         <div class="flex flex-col gap-3">
@@ -155,27 +164,27 @@
                         </div>
                     </div>
 
-                    {{-- Quick links --}}
+                    
                     <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
                         <h3 class="text-sm font-bold text-slate-900 mb-4">Quick Links</h3>
                         <div class="flex flex-col gap-2">
-                            <a href="{{ route('courses.index') }}" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-slate-600 transition hover:bg-brand-50 hover:text-brand-700">
+                            <a href="<?php echo e(route('courses.index')); ?>" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-slate-600 transition hover:bg-brand-50 hover:text-brand-700">
                                 <svg class="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
                                 Browse Courses
                             </a>
-                            <a href="{{ route('robots.index') }}" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-slate-600 transition hover:bg-brand-50 hover:text-brand-700">
+                            <a href="<?php echo e(route('robots.index')); ?>" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-slate-600 transition hover:bg-brand-50 hover:text-brand-700">
                                 <svg class="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
                                 Explore Robots / EAs
                             </a>
-                            <a href="{{ route('pricing') }}" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-slate-600 transition hover:bg-brand-50 hover:text-brand-700">
+                            <a href="<?php echo e(route('pricing')); ?>" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-slate-600 transition hover:bg-brand-50 hover:text-brand-700">
                                 <svg class="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                                 View Pricing
                             </a>
-                            <a href="{{ route('about') }}" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-slate-600 transition hover:bg-brand-50 hover:text-brand-700">
+                            <a href="<?php echo e(route('about')); ?>" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-slate-600 transition hover:bg-brand-50 hover:text-brand-700">
                                 <svg class="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                                 About Us
                             </a>
-                            <a href="{{ route('register') }}" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-brand-600 transition hover:bg-brand-50">
+                            <a href="<?php echo e(route('register')); ?>" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-brand-600 transition hover:bg-brand-50">
                                 <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
                                 Join the Academy
                             </a>
@@ -184,7 +193,7 @@
 
                 </div>
 
-                {{-- ── Right: Contact form ── --}}
+                
                 <div class="lg:col-span-2">
                     <div class="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
 
@@ -193,74 +202,130 @@
                             <p class="mt-1 text-sm text-slate-500">Fill in the form and our team will get back to you within 24–48 hours.</p>
                         </div>
 
-                        {{-- Success flash --}}
-                        @if(session('success'))
+                        
+                        <?php if(session('success')): ?>
                             <div class="mb-6 flex items-start gap-3 rounded-xl border border-emerald-200 bg-emerald-50 p-4">
                                 <svg class="mt-0.5 h-5 w-5 flex-shrink-0 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                 </svg>
-                                <p class="text-sm font-medium text-emerald-800">{{ session('success') }}</p>
+                                <p class="text-sm font-medium text-emerald-800"><?php echo e(session('success')); ?></p>
                             </div>
-                        @endif
+                        <?php endif; ?>
 
-                        <form method="POST" action="{{ route('contact.submit') }}" class="space-y-6">
-                            @csrf
+                        <form method="POST" action="<?php echo e(route('contact.submit')); ?>" class="space-y-6">
+                            <?php echo csrf_field(); ?>
 
                             <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                                {{-- Name --}}
+                                
                                 <div>
                                     <label class="block text-sm font-medium text-slate-700 mb-1.5" for="name">Full Name <span class="text-rose-500">*</span></label>
-                                    <input type="text" id="name" name="name" value="{{ old('name') }}" required
+                                    <input type="text" id="name" name="name" value="<?php echo e(old('name')); ?>" required
                                            placeholder="John Doe"
-                                           class="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 shadow-sm transition focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 @error('name') border-rose-400 ring-2 ring-rose-400/20 @enderror">
-                                    @error('name')<p class="mt-1.5 text-xs text-rose-600">{{ $message }}</p>@enderror
+                                           class="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 shadow-sm transition focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 <?php $__errorArgs = ['name'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> border-rose-400 ring-2 ring-rose-400/20 <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>">
+                                    <?php $__errorArgs = ['name'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?><p class="mt-1.5 text-xs text-rose-600"><?php echo e($message); ?></p><?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                 </div>
 
-                                {{-- Email --}}
+                                
                                 <div>
                                     <label class="block text-sm font-medium text-slate-700 mb-1.5" for="email">Email Address <span class="text-rose-500">*</span></label>
-                                    <input type="email" id="email" name="email" value="{{ old('email') }}" required
+                                    <input type="email" id="email" name="email" value="<?php echo e(old('email')); ?>" required
                                            placeholder="you@example.com"
-                                           class="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 shadow-sm transition focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 @error('email') border-rose-400 ring-2 ring-rose-400/20 @enderror">
-                                    @error('email')<p class="mt-1.5 text-xs text-rose-600">{{ $message }}</p>@enderror
+                                           class="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 shadow-sm transition focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 <?php $__errorArgs = ['email'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> border-rose-400 ring-2 ring-rose-400/20 <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>">
+                                    <?php $__errorArgs = ['email'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?><p class="mt-1.5 text-xs text-rose-600"><?php echo e($message); ?></p><?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                 </div>
                             </div>
 
-                            {{-- Phone (optional) --}}
+                            
                             <div>
                                 <label class="block text-sm font-medium text-slate-700 mb-1.5" for="phone">
                                     Phone / WhatsApp <span class="text-slate-400 font-normal">(optional)</span>
                                 </label>
-                                <input type="tel" id="phone" name="subject" value="{{ old('subject') }}"
+                                <input type="tel" id="phone" name="subject" value="<?php echo e(old('subject')); ?>"
                                        placeholder="+255 800 000 0000  or type your subject"
                                        class="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 shadow-sm transition focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20">
                             </div>
 
-                            {{-- Subject --}}
+                            
                             <div>
                                 <label class="block text-sm font-medium text-slate-700 mb-1.5" for="subject">Subject <span class="text-rose-500">*</span></label>
                                 <select id="subject" name="subject" required
-                                        class="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 shadow-sm transition focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 @error('subject') border-rose-400 @enderror">
+                                        class="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 shadow-sm transition focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 <?php $__errorArgs = ['subject'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> border-rose-400 <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>">
                                     <option value="">— Select a topic —</option>
-                                    <option value="Course enquiry" {{ old('subject') == 'Course enquiry' ? 'selected' : '' }}>Course enquiry</option>
-                                    <option value="Robot / EA subscription" {{ old('subject') == 'Robot / EA subscription' ? 'selected' : '' }}>Robot / EA subscription</option>
-                                    <option value="Mentorship" {{ old('subject') == 'Mentorship' ? 'selected' : '' }}>Mentorship</option>
-                                    <option value="Forex signals" {{ old('subject') == 'Forex signals' ? 'selected' : '' }}>Forex signals</option>
-                                    <option value="Account management" {{ old('subject') == 'Account management' ? 'selected' : '' }}>Account management</option>
-                                    <option value="Billing / Payment" {{ old('subject') == 'Billing / Payment' ? 'selected' : '' }}>Billing / Payment</option>
-                                    <option value="Technical support" {{ old('subject') == 'Technical support' ? 'selected' : '' }}>Technical support</option>
-                                    <option value="Other" {{ old('subject') == 'Other' ? 'selected' : '' }}>Other</option>
+                                    <option value="Course enquiry" <?php echo e(old('subject') == 'Course enquiry' ? 'selected' : ''); ?>>Course enquiry</option>
+                                    <option value="Robot / EA subscription" <?php echo e(old('subject') == 'Robot / EA subscription' ? 'selected' : ''); ?>>Robot / EA subscription</option>
+                                    <option value="Mentorship" <?php echo e(old('subject') == 'Mentorship' ? 'selected' : ''); ?>>Mentorship</option>
+                                    <option value="Forex signals" <?php echo e(old('subject') == 'Forex signals' ? 'selected' : ''); ?>>Forex signals</option>
+                                    <option value="Account management" <?php echo e(old('subject') == 'Account management' ? 'selected' : ''); ?>>Account management</option>
+                                    <option value="Billing / Payment" <?php echo e(old('subject') == 'Billing / Payment' ? 'selected' : ''); ?>>Billing / Payment</option>
+                                    <option value="Technical support" <?php echo e(old('subject') == 'Technical support' ? 'selected' : ''); ?>>Technical support</option>
+                                    <option value="Other" <?php echo e(old('subject') == 'Other' ? 'selected' : ''); ?>>Other</option>
                                 </select>
-                                @error('subject')<p class="mt-1.5 text-xs text-rose-600">{{ $message }}</p>@enderror
+                                <?php $__errorArgs = ['subject'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?><p class="mt-1.5 text-xs text-rose-600"><?php echo e($message); ?></p><?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                             </div>
 
-                            {{-- Message --}}
+                            
                             <div>
                                 <label class="block text-sm font-medium text-slate-700 mb-1.5" for="message">Message <span class="text-rose-500">*</span></label>
                                 <textarea id="message" name="message" required rows="6"
                                           placeholder="Tell us how we can help you..."
-                                          class="w-full resize-y rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 shadow-sm transition focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 @error('message') border-rose-400 ring-2 ring-rose-400/20 @enderror">{{ old('message') }}</textarea>
-                                @error('message')<p class="mt-1.5 text-xs text-rose-600">{{ $message }}</p>@enderror
+                                          class="w-full resize-y rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 shadow-sm transition focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 <?php $__errorArgs = ['message'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> border-rose-400 ring-2 ring-rose-400/20 <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"><?php echo e(old('message')); ?></textarea>
+                                <?php $__errorArgs = ['message'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?><p class="mt-1.5 text-xs text-rose-600"><?php echo e($message); ?></p><?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                             </div>
 
                             <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between pt-2">
@@ -278,7 +343,7 @@
                         </form>
                     </div>
 
-                    {{-- Response time banner --}}
+                    
                     <div class="mt-6 rounded-2xl border border-gold-200/60 bg-gold-50/60 p-5 flex items-start gap-4">
                         <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gold-100 text-gold-600">
                             <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -298,4 +363,14 @@
         </div>
     </section>
 
-</x-layouts.public>
+ <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal8c0e86a062c1c5bb6d0e151b7076f3fd)): ?>
+<?php $attributes = $__attributesOriginal8c0e86a062c1c5bb6d0e151b7076f3fd; ?>
+<?php unset($__attributesOriginal8c0e86a062c1c5bb6d0e151b7076f3fd); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal8c0e86a062c1c5bb6d0e151b7076f3fd)): ?>
+<?php $component = $__componentOriginal8c0e86a062c1c5bb6d0e151b7076f3fd; ?>
+<?php unset($__componentOriginal8c0e86a062c1c5bb6d0e151b7076f3fd); ?>
+<?php endif; ?>
+<?php /**PATH D:\projects\emmiox-academy\emmiox-academy\resources\views/public/contact.blade.php ENDPATH**/ ?>

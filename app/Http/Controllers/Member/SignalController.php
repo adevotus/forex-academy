@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Member;
 use App\Http\Controllers\Controller;
 use App\Models\Payment;
 use App\Models\PaymentMethod;
+use App\Models\Setting;
 use App\Models\Signal;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -13,8 +14,6 @@ use Illuminate\View\View;
 
 class SignalController extends Controller
 {
-    const PRICE = 15000; // $150 for the 3-month package
-
     public function index(): View
     {
         $user = Auth::user();
@@ -26,7 +25,13 @@ class SignalController extends Controller
         $subscription   = $user->signalSubscription()->where('status', 'active')->latest()->first();
         $paymentMethods = PaymentMethod::active()->get();
 
-        return view('member.signals.index', compact('hasSignals', 'signals', 'subscription', 'paymentMethods'));
+        $signalPrice    = Setting::get('signal_price', '150.00');
+        $currency       = Setting::get('currency', 'USD');
+
+        return view('member.signals.index', compact(
+            'hasSignals', 'signals', 'subscription', 'paymentMethods',
+            'signalPrice', 'currency'
+        ));
     }
 
     public function requestUnlock(Request $request): RedirectResponse
@@ -49,10 +54,13 @@ class SignalController extends Controller
             $proofPath = $request->file('proof')->store('proofs', 'public');
         }
 
+        // Convert dollar amount from settings to cents for storage
+        $priceInCents = (int) round((float) Setting::get('signal_price', '150.00') * 100);
+
         Payment::create([
             'user_id'     => Auth::id(),
             'type'        => 'signal_subscription',
-            'amount'      => self::PRICE,
+            'amount'      => $priceInCents,
             'status'      => 'pending',
             'proof_path'  => $proofPath,
             'description' => 'Signal Subscription (3 months)',
