@@ -1,8 +1,8 @@
-# EMMIOXFOREX ACADEMY — Laravel 11 Platform
+# EMMIOXFOREX ACADEMY
 
-A full Laravel 11 implementation of the EMMIOXFOREX ACADEMY platform: a public marketing
-site, a **Member** learning dashboard, and an **Admin** control panel — built around the
-two-role, pay-to-unlock system described in the project brief.
+AEMMIOXFOREX ACADEMY platform: a public marketing
+site, a **Member** learning dashboard, and an **Admin** control panel built around the
+two-role, pay to Unlock system described in the project brief.
 
 
 ## How the access/unlock system works

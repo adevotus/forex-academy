@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Course;
 use App\Models\User;
 use App\Models\UserLoginSession;
 use Illuminate\Http\RedirectResponse;
@@ -42,6 +43,29 @@ class MemberController extends Controller
             'loginSessions',
         ]);
 
+        // Courses this member has unlocked (via UserUnlock pivot)
+        $unlockedCourseIds = $member->unlocks
+            ->where('unlockable_type', Course::class)
+            ->pluck('unlockable_id');
+
+        $unlockedCourses = Course::whereIn('id', $unlockedCourseIds)->get()
+            ->map(function ($course) use ($member) {
+                $unlock = $member->unlocks
+                    ->where('unlockable_type', Course::class)
+                    ->where('unlockable_id', $course->id)
+                    ->first();
+                $payment = $member->payments
+                    ->where('payable_type', Course::class)
+                    ->where('payable_id', $course->id)
+                    ->where('status', 'approved')
+                    ->first();
+                return [
+                    'course'  => $course,
+                    'unlocked_at' => $unlock?->created_at,
+                    'amount'  => $payment?->amountFormatted() ?? $course->priceFormatted(),
+                ];
+            });
+
         // Group lesson progress by course
         $courseProgress = $member->lessonProgress
             ->where('completed', true)
@@ -57,7 +81,10 @@ class MemberController extends Controller
             'sessions_count'    => $member->loginSessions->count(),
         ];
 
-        return view('admin.members.show', compact('member', 'stats', 'courseProgress'));
+        // Fix total_spent: stored in cents, divide by 100
+        $stats['total_spent'] = $stats['total_spent'] / 100;
+
+        return view('admin.members.show', compact('member', 'stats', 'courseProgress', 'unlockedCourses'));
     }
 
     public function update(Request $request, User $member): RedirectResponse

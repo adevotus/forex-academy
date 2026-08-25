@@ -36,7 +36,7 @@ class Payment extends Model
     {
         $currency = Setting::get('currency', 'USD');
         $symbol   = $currency === 'TZS' ? 'TZS ' : '$';
-        return $symbol . number_format($this->amount, 2);
+        return $symbol . number_format($this->amount / 100, 2);
     }
 
     public function currencySymbol(): string

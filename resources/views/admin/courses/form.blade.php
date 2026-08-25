@@ -124,27 +124,80 @@
                     </div>
                 </div>
 
-                {{-- Promo Video --}}
+                {{-- Promo Video Upload --}}
                 <div class="card overflow-hidden">
                     <div class="border-b border-slate-100 bg-slate-50 px-6 py-4">
                         <h2 class="text-sm font-extrabold uppercase tracking-wide text-slate-700">Intro / Promo Video</h2>
-                        <p class="mt-0.5 text-xs text-slate-500">Optional short video shown on the course page before purchase.</p>
+                        <p class="mt-0.5 text-xs text-slate-500">Optional short MP4 video shown on the course page before purchase. <strong class="text-rose-500">Max 10 MB.</strong></p>
                     </div>
                     <div class="p-6 space-y-4">
-                        <div>
-                            <label class="label" for="promo_video_url">Video URL</label>
-                            <input id="promo_video_url" type="url" name="promo_video_url"
-                                   value="{{ old('promo_video_url', $course->promo_video_url ?? '') }}"
-                                   class="input" placeholder="https://youtube.com/watch?v=... or Vimeo link">
-                            <p class="mt-1 text-xs text-slate-400">Paste a YouTube, Vimeo, or direct MP4 URL.</p>
+
+                        {{-- Hidden field populated by the uploader --}}
+                        <input type="hidden" name="promo_video_path" id="hidden-promo-path"
+                               value="{{ old('promo_video_path', $course->promo_video_path ?? '') }}">
+
+                        {{-- Size error banner --}}
+                        <div id="promo-size-error" class="hidden items-start gap-3 rounded-xl border border-rose-200 bg-rose-50 p-4">
+                            <svg class="mt-0.5 h-5 w-5 flex-shrink-0 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                            <div>
+                                <p class="text-sm font-semibold text-rose-700">File too large</p>
+                                <p class="text-xs text-rose-600 mt-0.5">The selected video exceeds the 10 MB limit. Please compress the video or choose a shorter clip.</p>
+                            </div>
                         </div>
-                        @if(($course->promo_video_url ?? false))
-                            <div class="rounded-xl border border-slate-200 bg-slate-50 p-3 flex items-center gap-3">
-                                <svg class="h-5 w-5 flex-shrink-0 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
-                                <a href="{{ $course->promo_video_url }}" target="_blank"
-                                   class="truncate text-xs font-medium text-brand-600 hover:underline">{{ $course->promo_video_url }}</a>
+
+                        {{-- Existing uploaded video --}}
+                        @php $hasPromo = $course->exists && ($course->promo_video_path ?? false); @endphp
+                        @if($hasPromo)
+                            <div class="flex items-center gap-3 rounded-xl border border-emerald-100 bg-emerald-50 p-3">
+                                <svg class="h-5 w-5 flex-shrink-0 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-xs font-semibold text-emerald-700">Current promo video</p>
+                                    <a href="{{ asset('storage/'.$course->promo_video_path) }}" target="_blank"
+                                       class="block truncate text-xs text-emerald-600 hover:underline">{{ basename($course->promo_video_path) }}</a>
+                                </div>
+                                <a href="{{ asset('storage/'.$course->promo_video_path) }}" target="_blank"
+                                   class="flex-shrink-0 rounded-lg border border-emerald-200 px-3 py-1.5 text-[11px] font-bold text-emerald-700 hover:bg-emerald-100 transition">Preview ↗</a>
                             </div>
                         @endif
+
+                        {{-- Drop zone --}}
+                        <label id="promo-drop-zone"
+                               class="flex cursor-pointer flex-col items-center gap-3 rounded-xl border-2 border-dashed border-slate-200 bg-slate-50 p-10 text-center transition hover:border-brand-400 hover:bg-brand-50">
+
+                            <div id="pdz-idle" class="flex flex-col items-center gap-3">
+                                <div class="flex h-16 w-16 items-center justify-center rounded-2xl border border-slate-200 bg-white shadow-sm">
+                                    <svg class="h-8 w-8 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-semibold text-slate-700">{{ $hasPromo ? 'Replace promo video' : 'Click to upload promo video' }}</p>
+                                    <p class="mt-0.5 text-xs text-slate-400">MP4, MOV, WEBM — <strong class="text-rose-500">max 10 MB</strong></p>
+                                </div>
+                            </div>
+
+                            <div id="pdz-uploading" class="hidden w-full flex-col items-center gap-3">
+                                <p id="pdz-filename" class="truncate max-w-xs text-sm font-semibold text-slate-700"></p>
+                                <div class="w-full max-w-sm">
+                                    <div class="flex justify-between text-xs text-slate-500 mb-1">
+                                        <span id="pdz-progress-text">Uploading…</span>
+                                        <span id="pdz-percent">0%</span>
+                                    </div>
+                                    <div class="h-2 w-full overflow-hidden rounded-full bg-slate-200">
+                                        <div id="pdz-bar" class="h-2 rounded-full bg-brand-500 transition-all duration-200" style="width:0%"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="pdz-done" class="hidden flex-col items-center gap-2">
+                                <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-50">
+                                    <svg class="h-7 w-7 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                </div>
+                                <p id="pdz-done-name" class="truncate max-w-xs text-sm font-semibold text-emerald-700"></p>
+                                <p class="text-xs text-slate-400">Upload complete — click to replace</p>
+                            </div>
+
+                            <input type="file" id="promo-file-input" accept="video/mp4,video/mov,video/webm,video/avi,video/mkv" class="hidden">
+                        </label>
+
                     </div>
                 </div>
 
@@ -156,7 +209,10 @@
                 {{-- Save panel --}}
                 <div class="card p-6 space-y-4">
                     <h2 class="text-sm font-extrabold uppercase tracking-wide text-slate-700">Publish</h2>
-                    <button type="submit" class="btn-primary w-full py-2.5">
+                    <div id="upload-warning" class="hidden rounded-xl border border-amber-100 bg-amber-50 p-3 text-xs text-amber-700">
+                        <strong>Please wait</strong> — video upload in progress.
+                    </div>
+                    <button type="submit" id="save-btn" class="btn-primary w-full py-2.5">
                         <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                         {{ $course->exists ? 'Save Changes' : 'Create Course' }}
                     </button>
@@ -165,14 +221,11 @@
 
                     @if($course->exists)
                         <div class="border-t border-slate-100 pt-4">
-                            <form method="POST" action="{{ route('admin.courses.destroy', $course) }}"
-                                  onsubmit="return confirm('Delete this course and all its lessons? This cannot be undone.')">
-                                @csrf @method('DELETE')
-                                <button type="submit"
-                                        class="w-full rounded-lg border border-rose-200 bg-rose-50 px-4 py-2 text-xs font-semibold text-rose-700 hover:bg-rose-100 transition">
-                                    Delete Course
-                                </button>
-                            </form>
+                            <button type="button"
+                                    onclick="if(confirm('Delete this course and all its lessons? This cannot be undone.')) document.getElementById('delete-course-form').submit();"
+                                    class="w-full rounded-lg border border-rose-200 bg-rose-50 px-4 py-2 text-xs font-semibold text-rose-700 hover:bg-rose-100 transition">
+                                Delete Course
+                            </button>
                         </div>
                     @endif
                 </div>
@@ -222,8 +275,15 @@
         </div>
     </form>
 
+    @if($course->exists)
+        <form id="delete-course-form" method="POST" action="{{ route('admin.courses.destroy', $course) }}" class="hidden">
+            @csrf @method('DELETE')
+        </form>
+    @endif
+
     <script>
-        // Cover image preview
+    (function () {
+        // ── Cover image preview ────────────────────────────────────────────────
         const coverInput    = document.getElementById('cover-input');
         const coverFilename = document.getElementById('cover-filename');
         const coverZone     = document.getElementById('cover-drop-zone');
@@ -233,11 +293,10 @@
                 if (this.files[0]) {
                     coverFilename.textContent = '✓ ' + this.files[0].name;
                     coverFilename.classList.remove('hidden');
-                    // Show image preview
                     const reader = new FileReader();
                     reader.onload = function (e) {
-                        coverZone.style.backgroundImage = 'url(' + e.target.result + ')';
-                        coverZone.style.backgroundSize = 'cover';
+                        coverZone.style.backgroundImage    = 'url(' + e.target.result + ')';
+                        coverZone.style.backgroundSize     = 'cover';
                         coverZone.style.backgroundPosition = 'center';
                         coverZone.querySelector('svg').style.opacity = '0';
                         coverZone.querySelector('div').style.opacity = '0';
@@ -246,5 +305,88 @@
                 }
             });
         }
+
+        // ── Promo video chunked uploader ───────────────────────────────────────
+        const MAX_BYTES   = 10 * 1024 * 1024;  // 10 MB
+        const CHUNK_SIZE  =  5 * 1024 * 1024;  // 5 MB per chunk
+        const UPLOAD_URL  = '{{ route('admin.lessons.video.chunk') }}';
+        const CSRF        = '{{ csrf_token() }}';
+
+        const fileInput   = document.getElementById('promo-file-input');
+        const dropZone    = document.getElementById('promo-drop-zone');
+        const idle        = document.getElementById('pdz-idle');
+        const uploading   = document.getElementById('pdz-uploading');
+        const done        = document.getElementById('pdz-done');
+        const sizeError   = document.getElementById('promo-size-error');
+        const bar         = document.getElementById('pdz-bar');
+        const pctEl       = document.getElementById('pdz-percent');
+        const progText    = document.getElementById('pdz-progress-text');
+        const fileLabel   = document.getElementById('pdz-filename');
+        const doneLabel   = document.getElementById('pdz-done-name');
+        const hiddenPath  = document.getElementById('hidden-promo-path');
+        const saveBtn     = document.getElementById('save-btn');
+        const warnBox     = document.getElementById('upload-warning');
+
+        function setState(s, name) {
+            [idle, uploading, done].forEach(el => { el.classList.add('hidden'); el.classList.remove('flex'); });
+            if (s === 'idle')      { idle.classList.remove('hidden'); }
+            if (s === 'uploading') { uploading.classList.remove('hidden'); uploading.classList.add('flex'); fileLabel.textContent = name || ''; }
+            if (s === 'done')      { done.classList.remove('hidden');      done.classList.add('flex');      doneLabel.textContent  = name || ''; }
+        }
+
+        function showErr(v) { sizeError.classList.toggle('hidden', !v); sizeError.classList.toggle('flex', v); }
+
+        function lockSave(v) {
+            saveBtn.disabled = v;
+            saveBtn.classList.toggle('opacity-50', v);
+            saveBtn.classList.toggle('cursor-not-allowed', v);
+            warnBox.classList.toggle('hidden', !v);
+        }
+
+        function uid() { return 'xxxx-xxxx-xxxx'.replace(/x/g, () => (Math.random()*16|0).toString(16)); }
+
+        async function uploadFile(file) {
+            if (file.size > MAX_BYTES) { showErr(true); setState('idle'); return; }
+            showErr(false);
+
+            const total = Math.ceil(file.size / CHUNK_SIZE);
+            const uuid  = uid() + '-' + Date.now();
+            setState('uploading', file.name);
+            lockSave(true);
+
+            for (let i = 0; i < total; i++) {
+                const fd = new FormData();
+                fd.append('_token',       CSRF);
+                fd.append('file',         file.slice(i * CHUNK_SIZE, (i+1) * CHUNK_SIZE), 'chunk');
+                fd.append('uuid',         uuid);
+                fd.append('index',        i);
+                fd.append('total_chunks', total);
+                fd.append('filename',     file.name);
+                fd.append('filesize',     file.size);
+
+                let resp, json;
+                try   { resp = await fetch(UPLOAD_URL, {method:'POST', body:fd}); json = await resp.json(); }
+                catch (e) { alert('Upload error: ' + e.message); setState('idle'); lockSave(false); return; }
+
+                if (!resp.ok) { alert(json.error || json.message || 'Server error'); setState('idle'); lockSave(false); return; }
+
+                const p = Math.round(((i+1)/total)*100);
+                bar.style.width = p + '%'; pctEl.textContent = p + '%';
+                progText.textContent = 'Uploading ' + (i+1) + ' of ' + total + '…';
+
+                if (json.status === 'complete') { hiddenPath.value = json.video_path; setState('done', file.name); lockSave(false); }
+            }
+        }
+
+        fileInput.addEventListener('change', e => { if (e.target.files[0]) uploadFile(e.target.files[0]); });
+        dropZone.addEventListener('dragover',  e => { e.preventDefault(); dropZone.classList.add('border-brand-400','bg-brand-50'); });
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('border-brand-400','bg-brand-50'));
+        dropZone.addEventListener('drop', e => {
+            e.preventDefault(); dropZone.classList.remove('border-brand-400','bg-brand-50');
+            const f = e.dataTransfer.files[0];
+            if (f && f.type.startsWith('video/')) uploadFile(f);
+            else alert('Please drop a video file (MP4, MOV, WEBM).');
+        });
+    })();
     </script>
 </x-layouts.admin>

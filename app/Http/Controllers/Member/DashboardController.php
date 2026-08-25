@@ -16,7 +16,10 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
 
-        $courses = Course::where('published', true)->orderBy('order')->get();
+        $courses = Course::where('published', true)
+            ->with('lessons')
+            ->orderBy('order')
+            ->get();
 
         $unlockedCourseIds = $user->unlocks()
             ->where('unlockable_type', Course::class)
@@ -25,6 +28,21 @@ class DashboardController extends Controller
         $completedLessons = LessonProgress::where('user_id', $user->id)
             ->where('completed', true)
             ->count();
+
+        // Per-course progress for dashboard
+        $allLessonIds = $courses->flatMap(fn($c) => $c->lessons->pluck('id'));
+        $completedLessonIds = LessonProgress::where('user_id', $user->id)
+            ->where('completed', true)
+            ->whereIn('lesson_id', $allLessonIds)
+            ->pluck('lesson_id')
+            ->flip();
+
+        $courseProgress = $courses->mapWithKeys(function ($course) use ($completedLessonIds, $unlockedCourseIds) {
+            $total     = $course->lessons->count();
+            $completed = $course->lessons->filter(fn($l) => $completedLessonIds->has($l->id))->count();
+            $pct       = $total > 0 ? round(($completed / $total) * 100) : 0;
+            return [$course->id => compact('completed', 'total', 'pct')];
+        });
 
         $lastProgress = LessonProgress::where('user_id', $user->id)
             ->latest('updated_at')
@@ -39,7 +57,8 @@ class DashboardController extends Controller
 
         return view('member.dashboard', compact(
             'user', 'courses', 'unlockedCourseIds', 'completedLessons',
-            'lastProgress', 'activeRobots', 'hasSignals', 'latestSignal', 'badges', 'testimonials'
+            'lastProgress', 'activeRobots', 'hasSignals', 'latestSignal',
+            'badges', 'testimonials', 'courseProgress'
         ));
     }
 }

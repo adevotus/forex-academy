@@ -2,17 +2,41 @@
     <x-slot name="header">
         <div>
             <span class="badge badge-level-{{ $course->level }}">{{ $course->levelLabel() }}</span>
-            <h1 class="mt-2 text-2xl font-bold text-white">{{ $course->title }}</h1>
-            <p class="mt-1 text-sm text-slate-400">{{ $course->description }}</p>
+            <h1 class="mt-2 text-2xl font-bold text-slate-900">{{ $course->title }}</h1>
+            <p class="mt-1 text-sm text-slate-600">{{ $course->description }}</p>
         </div>
     </x-slot>
 
     <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div class="lg:col-span-2">
+
+            {{-- ── Promo Video ── --}}
+            @if ($course->promo_video_path)
+                <div class="card mb-6 overflow-hidden">
+                    <div class="border-b border-slate-100 bg-slate-50 px-5 py-3 flex items-center gap-2">
+                        <svg class="h-4 w-4 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <span class="text-xs font-bold uppercase tracking-wide text-slate-600">Course Preview</span>
+                    </div>
+                    <video controls class="w-full bg-black" style="max-height:420px"
+                           @if($course->cover_image) poster="{{ asset('storage/'.$course->cover_image) }}" @endif>
+                        <source src="{{ asset('storage/'.$course->promo_video_path) }}" type="video/mp4">
+                        Your browser does not support the video player.
+                    </video>
+                </div>
+            @elseif ($course->cover_image)
+                <div class="card mb-6 overflow-hidden">
+                    <img src="{{ asset('storage/'.$course->cover_image) }}" alt="{{ $course->title }}"
+                         class="w-full object-cover" style="max-height:320px">
+                </div>
+            @endif
+
             @if (! $unlocked)
                 <div class="card mb-6 flex flex-wrap items-center justify-between gap-4 border-gold-400/20 bg-gold-400/5 p-6">
                     <div>
-                        <p class="font-semibold text-white">This course is locked</p>
+                        <p class="font-semibold text-slate-900">This course is locked</p>
                         <p class="mt-1 text-sm text-slate-400">Unlock for {{ $course->priceFormatted() }} to access every lesson.</p>
                     </div>
                     <button onclick="document.getElementById('unlock-modal').classList.remove('hidden'); document.body.style.overflow='hidden'" class="btn-gold">
@@ -188,50 +212,67 @@
                 </script>
             @endif
 
-            <div class="card divide-y divide-white/5">
-                @foreach ($course->lessons as $lesson)
+            <div class="card overflow-hidden divide-y divide-slate-100">
+                @forelse ($course->lessons as $lesson)
                     @php $done = $progress->contains($lesson->id); $canWatch = $lesson->isUnlockedFor(auth()->user()); @endphp
                     <a href="{{ $canWatch ? route('member.courses.lesson', [$course, $lesson]) : '#' }}"
-                       class="flex items-center justify-between px-6 py-4 {{ $canWatch ? 'hover:bg-white/5' : 'cursor-not-allowed opacity-50' }}">
+                       class="flex items-center justify-between px-6 py-4 transition {{ $canWatch ? 'hover:bg-brand-50' : 'cursor-not-allowed opacity-50' }}">
                         <div class="flex items-center gap-3">
-                            <span class="flex h-8 w-8 items-center justify-center rounded-full {{ $done ? 'bg-emerald-400/20 text-emerald-300' : 'bg-white/5 text-slate-400' }} text-xs font-semibold">
+                            <span class="flex h-8 w-8 items-center justify-center rounded-full text-xs font-semibold {{ $done ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500' }}">
                                 @if ($done) <x-icon name="check" class="h-4 w-4" /> @else {{ $loop->iteration }} @endif
                             </span>
                             <div>
-                                <p class="text-sm font-medium text-white">{{ $lesson->title }}</p>
-                                <p class="text-xs text-slate-500">{{ $lesson->duration_minutes }} min @if($lesson->is_preview) · Free Preview @endif</p>
+                                <p class="text-sm font-semibold text-slate-900">{{ $lesson->title }}</p>
+                                <p class="text-xs text-slate-500">{{ $lesson->duration_minutes ? $lesson->duration_minutes.' min' : '' }}@if($lesson->is_preview) @if($lesson->duration_minutes) · @endif <span class="text-emerald-600 font-medium">Free Preview</span> @endif</p>
                             </div>
                         </div>
                         @if (! $canWatch)
-                            <x-icon name="lock" class="h-4 w-4 text-slate-600" />
+                            <x-icon name="lock" class="h-4 w-4 text-slate-400" />
                         @else
-                            <x-icon name="play" class="h-4 w-4 text-brand-400" />
+                            <x-icon name="play" class="h-4 w-4 text-brand-500" />
                         @endif
                     </a>
-                @endforeach
+                @empty
+                    <div class="flex flex-col items-center gap-3 px-6 py-14 text-center">
+                        <div class="flex h-14 w-14 items-center justify-center rounded-full bg-slate-100">
+                            <svg class="h-7 w-7 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 010 1.972l-11.54 6.347a1.125 1.125 0 01-1.667-.986V5.653z"/>
+                            </svg>
+                        </div>
+                        <p class="text-sm font-semibold text-slate-700">No lessons yet</p>
+                        <p class="text-xs text-slate-400">Lessons will appear here once the instructor adds them.</p>
+                    </div>
+                @endforelse
             </div>
         </div>
 
         <div class="space-y-6">
             @if ($course->cheatSheets->count())
                 <div class="card p-6">
-                    <h2 class="font-semibold text-white">Cheat Sheets</h2>
+                    <h2 class="font-semibold text-slate-900">Cheat Sheets</h2>
                     <div class="mt-3 space-y-2">
                         @foreach ($course->cheatSheets as $sheet)
-                            <div class="flex items-center justify-between rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-slate-300">
+                            <div class="flex items-center justify-between rounded-lg border border-slate-100 bg-slate-50 px-3 py-2 text-sm text-slate-700">
                                 <span>{{ $sheet->title }}</span>
-                                <x-icon name="download" class="h-4 w-4 text-slate-500" />
+                                <x-icon name="download" class="h-4 w-4 text-slate-400" />
                             </div>
                         @endforeach
                     </div>
                 </div>
             @endif
 
+            @if ($course->cover_image)
+                <div class="card overflow-hidden">
+                    <img src="{{ asset('storage/'.$course->cover_image) }}" alt="{{ $course->title }}"
+                         class="w-full object-cover" style="max-height:180px">
+                </div>
+            @endif
+
             <div class="card p-6">
-                <h2 class="font-semibold text-white">Your Progress</h2>
+                <h2 class="font-semibold text-slate-900">Your Progress</h2>
                 @php $pct = $course->lessons->count() ? round(($progress->count() / $course->lessons->count()) * 100) : 0; @endphp
-                <div class="mt-3 h-2 w-full overflow-hidden rounded-full bg-white/10">
-                    <div class="h-full rounded-full bg-gradient-to-r from-brand-500 to-brand-300" style="width: {{ $pct }}%"></div>
+                <div class="mt-3 h-2.5 w-full overflow-hidden rounded-full bg-slate-200">
+                    <div class="h-full rounded-full bg-gradient-to-r from-brand-500 to-brand-400 transition-all" style="width: {{ $pct }}%"></div>
                 </div>
                 <p class="mt-2 text-xs text-slate-500">{{ $progress->count() }} / {{ $course->lessons->count() }} lessons complete ({{ $pct }}%)</p>
             </div>

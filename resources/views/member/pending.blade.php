@@ -1,4 +1,4 @@
-<x-layouts.public title="Complete Registration — EMMIOXFOREX ACADEMY">
+<x-layouts.public title="Complete Registration | EMMIOXFOREX ACADEMY">
 <section class="min-h-[90vh] bg-slate-50 px-4 py-12 sm:px-6 lg:px-8">
 <div class="mx-auto max-w-3xl">
 

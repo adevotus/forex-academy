@@ -1,4 +1,4 @@
-<x-layouts.public title="Courses — EMMIOXFOREX ACADEMY">
+<x-layouts.public title="Courses | EMMIOXFOREX ACADEMY">
 
     {{-- Page hero --}}
     <section class="border-b border-slate-200 bg-slate-50 px-4 py-20 sm:px-6 lg:px-8">

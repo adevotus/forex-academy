@@ -1,4 +1,4 @@
-<x-layouts.app title="Log In — EMMIOXFOREX ACADEMY">
+<x-layouts.app title="Log In | EMMIOXFOREX ACADEMY">
 <div class="flex min-h-screen flex-col lg:flex-row">
 
     {{-- ═══════════════════════════════════════════════════

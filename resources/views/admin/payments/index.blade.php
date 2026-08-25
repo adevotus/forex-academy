@@ -2,7 +2,7 @@
 @php
     $currency       = \App\Models\Setting::get('currency', 'USD');
     $currencySymbol = $currency === 'TZS' ? 'TZS ' : '$';
-    $totalShown     = $payments->sum('amount');
+    $totalShown     = $payments->sum('amount') / 100;
     $activeStatus   = request('status', '');
     $activeType     = request('type', '');
 @endphp
@@ -203,8 +203,8 @@
                             <label class="text-xs font-semibold text-blue-800">Correct Amount:</label>
                             <div class="flex items-center gap-1.5 rounded-lg border border-blue-200 bg-white px-3 py-1.5">
                                 <span class="text-xs font-semibold text-slate-400">{{ $payment->currencySymbol() }}</span>
-                                <input type="number" name="amount" step="0.01" min="1"
-                                    value="{{ $payment->amount }}"
+                                <input type="number" name="amount" step="0.01" min="0.01"
+                                    value="{{ number_format($payment->amount / 100, 2, '.', '') }}"
                                     class="w-28 text-sm font-bold text-slate-900 outline-none">
                             </div>
                             <button type="submit" class="rounded-lg bg-blue-600 px-4 py-1.5 text-xs font-bold text-white hover:bg-blue-700 transition">

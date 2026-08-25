@@ -1,4 +1,4 @@
-<x-layouts.public title="EMMIOXFOREX ACADEMY — Learn. Trade. Automate. Grow.">
+<x-layouts.public title="EMMIOXFOREX ACADEMY | Learn. Trade. Automate. Grow.">
 
     {{-- ═══════════════════════════════════════════════════
          HERO

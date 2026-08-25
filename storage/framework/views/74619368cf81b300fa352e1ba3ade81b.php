@@ -1,5 +1,14 @@
-<x-layouts.admin title="Mentorship Packages">
-    <x-slot name="header">
+<?php if (isset($component)) { $__componentOriginalc8c9fd5d7827a77a31381de67195f0c3 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalc8c9fd5d7827a77a31381de67195f0c3 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.layouts.admin','data' => ['title' => 'Mentorship Packages']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('layouts.admin'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['title' => 'Mentorship Packages']); ?>
+     <?php $__env->slot('header', null, []); ?> 
         <div>
             <h1 class="text-2xl font-extrabold text-slate-900">Mentorship Packages</h1>
             <p class="mt-1 text-sm text-slate-500">Manage group and 1-on-1 mentorship offerings.</p>
@@ -8,14 +17,15 @@
             <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
             New Package
         </button>
-    </x-slot>
+     <?php $__env->endSlot(); ?>
 
-    @if(session('success'))
+    <?php if(session('success')): ?>
         <div class="mb-4 flex items-center gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">
             <svg class="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            {{ session('success') }}
+            <?php echo e(session('success')); ?>
+
         </div>
-    @endif
+    <?php endif; ?>
 
     <div class="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
         <table class="w-full text-left text-sm">
@@ -30,48 +40,48 @@
                 </tr>
             </thead>
             <tbody class="divide-y divide-slate-100">
-                @forelse ($sessions as $session)
+                <?php $__empty_1 = true; $__currentLoopData = $sessions; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $session): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                     <tr class="hover:bg-slate-50 transition">
                         <td class="px-6 py-4">
-                            <p class="font-semibold text-slate-900">{{ $session->title }}</p>
-                            @if($session->mentor_name)
-                                <p class="text-xs text-slate-400 mt-0.5">by {{ $session->mentor_name }}</p>
-                            @endif
+                            <p class="font-semibold text-slate-900"><?php echo e($session->title); ?></p>
+                            <?php if($session->mentor_name): ?>
+                                <p class="text-xs text-slate-400 mt-0.5">by <?php echo e($session->mentor_name); ?></p>
+                            <?php endif; ?>
                         </td>
                         <td class="px-6 py-4">
-                            @if($session->type === 'one_on_one')
+                            <?php if($session->type === 'one_on_one'): ?>
                                 <span class="inline-flex rounded-full border border-purple-200 bg-purple-50 px-2.5 py-0.5 text-xs font-semibold text-purple-700">1-on-1</span>
-                            @else
+                            <?php else: ?>
                                 <span class="inline-flex rounded-full border border-blue-200 bg-blue-50 px-2.5 py-0.5 text-xs font-semibold text-blue-700">Group</span>
-                            @endif
+                            <?php endif; ?>
                         </td>
-                        <td class="px-6 py-4 font-semibold text-slate-900">{{ $session->priceFormatted() }}</td>
-                        <td class="px-6 py-4 text-slate-600">{{ $session->bookings_count ?? 0 }}</td>
+                        <td class="px-6 py-4 font-semibold text-slate-900"><?php echo e($session->priceFormatted()); ?></td>
+                        <td class="px-6 py-4 text-slate-600"><?php echo e($session->bookings_count ?? 0); ?></td>
                         <td class="px-6 py-4">
-                            @if($session->published)
+                            <?php if($session->published): ?>
                                 <span class="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-xs font-semibold text-emerald-700">
                                     <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span> Live
                                 </span>
-                            @else
+                            <?php else: ?>
                                 <span class="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-100 px-2.5 py-0.5 text-xs font-semibold text-slate-500">
                                     <span class="h-1.5 w-1.5 rounded-full bg-slate-400"></span> Draft
                                 </span>
-                            @endif
+                            <?php endif; ?>
                         </td>
                         <td class="px-6 py-4 text-right">
                             <div class="flex justify-end gap-2">
-                                <button onclick="editMentor({{ $session->id }})"
+                                <button onclick="editMentor(<?php echo e($session->id); ?>)"
                                     class="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition shadow-sm">
                                     Edit
                                 </button>
-                                <form method="POST" action="{{ route('admin.mentorship.destroy', $session) }}" onsubmit="return confirm('Delete {{ addslashes($session->title) }}?')">
-                                    @csrf @method('DELETE')
+                                <form method="POST" action="<?php echo e(route('admin.mentorship.destroy', $session)); ?>" onsubmit="return confirm('Delete <?php echo e(addslashes($session->title)); ?>?')">
+                                    <?php echo csrf_field(); ?> <?php echo method_field('DELETE'); ?>
                                     <button class="rounded-lg border border-rose-200 bg-rose-50 px-3 py-1.5 text-xs font-semibold text-rose-700 hover:bg-rose-100 transition">Delete</button>
                                 </form>
                             </div>
                         </td>
                     </tr>
-                @empty
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                     <tr>
                         <td colspan="6" class="px-6 py-16 text-center">
                             <svg class="mx-auto h-10 w-10 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
@@ -81,20 +91,20 @@
                             <p class="mt-1 text-xs text-slate-400">Click "New Package" to add your first mentorship offering.</p>
                         </td>
                     </tr>
-                @endforelse
+                <?php endif; ?>
             </tbody>
         </table>
     </div>
 
 
-    {{-- ── Mentorship Modal ── --}}
+    
     <div id="mentor-modal" class="fixed inset-0 z-50 hidden" style="background:rgba(15,23,42,0.45)">
         <div class="absolute inset-0" onclick="closeMentorModal()"></div>
 
         <div class="absolute inset-0 flex items-center justify-center p-6 pointer-events-none">
             <div class="pointer-events-auto w-full rounded-2xl bg-white shadow-2xl" style="max-width:580px">
 
-                {{-- Header --}}
+                
                 <div class="flex items-center justify-between px-6 pt-5 pb-4 border-b border-slate-100">
                     <div>
                         <p class="text-[11px] font-bold uppercase tracking-widest text-slate-400">Mentorship</p>
@@ -108,12 +118,12 @@
                     </button>
                 </div>
 
-                {{-- Form --}}
+                
                 <form id="mentor-form" method="POST" class="px-6 py-5 space-y-4">
-                    @csrf
+                    <?php echo csrf_field(); ?>
                     <input type="hidden" name="_method" id="mentor-method" value="POST">
 
-                    {{-- Title --}}
+                    
                     <div>
                         <label class="mb-1 block text-sm font-semibold text-slate-700">
                             Package Title <span class="text-rose-500">*</span>
@@ -122,7 +132,7 @@
                                placeholder="e.g. Elite Mentorship Programme" required>
                     </div>
 
-                    {{-- Type + Price --}}
+                    
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             <label class="mb-1 block text-sm font-semibold text-slate-700">Session Type</label>
@@ -144,14 +154,14 @@
                         </div>
                     </div>
 
-                    {{-- Mentor Name --}}
+                    
                     <div>
                         <label class="mb-1 block text-sm font-semibold text-slate-700">Mentor Name</label>
                         <input type="text" name="mentor_name" id="m-mentor" class="input w-full"
                                placeholder="e.g. John Doe">
                     </div>
 
-                    {{-- Description --}}
+                    
                     <div>
                         <label class="mb-1 block text-sm font-semibold text-slate-700">Description</label>
                         <textarea name="description" id="m-desc" rows="2"
@@ -159,7 +169,7 @@
                                   placeholder="What members get from this package…"></textarea>
                     </div>
 
-                    {{-- Footer --}}
+                    
                     <div class="flex items-center justify-between pt-1 border-t border-slate-100">
                         <label class="flex cursor-pointer select-none items-center gap-2">
                             <input type="checkbox" name="published" id="m-published" value="1" checked
@@ -181,11 +191,11 @@
         </div>
     </div>
 
-    {{-- Safe data island: JSON in a non-executing script tag avoids onclick attribute escaping issues --}}
-    <script id="mentor-sessions-data" type="application/json">@json($sessions)</script>
+    
+    <script id="mentor-sessions-data" type="application/json"><?php echo json_encode($sessions, 15, 512) ?></script>
 
     <script>
-    const mentorStoreUrl = "{{ route('admin.mentorship.store') }}";
+    const mentorStoreUrl = "<?php echo e(route('admin.mentorship.store')); ?>";
 
     // Build a lookup map by ID from the safe data island
     const mentorSessionsMap = {};
@@ -232,4 +242,14 @@
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMentorModal(); });
     </script>
 
-</x-layouts.admin>
+ <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalc8c9fd5d7827a77a31381de67195f0c3)): ?>
+<?php $attributes = $__attributesOriginalc8c9fd5d7827a77a31381de67195f0c3; ?>
+<?php unset($__attributesOriginalc8c9fd5d7827a77a31381de67195f0c3); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc8c9fd5d7827a77a31381de67195f0c3)): ?>
+<?php $component = $__componentOriginalc8c9fd5d7827a77a31381de67195f0c3; ?>
+<?php unset($__componentOriginalc8c9fd5d7827a77a31381de67195f0c3); ?>
+<?php endif; ?>
+<?php /**PATH D:\projects\emmiox-academy\emmiox-academy\resources\views/admin/mentorship/index.blade.php ENDPATH**/ ?>

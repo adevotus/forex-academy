@@ -42,7 +42,7 @@ class PaymentController extends Controller
             'pending'  => Payment::where('status', 'pending')->count(),
             'approved' => Payment::where('status', 'approved')->count(),
             'rejected' => Payment::where('status', 'rejected')->count(),
-            'revenue'  => Payment::where('status', 'approved')->sum('amount'),
+            'revenue'  => Payment::where('status', 'approved')->sum('amount') / 100,
         ];
 
         return view('admin.payments.index', compact('payments', 'stats'));
@@ -67,7 +67,7 @@ class PaymentController extends Controller
                 '"' . addslashes($p->user->name ?? '') . '"',
                 '"' . addslashes($p->user->email ?? '') . '"',
                 '"' . $p->typeLabel() . '"',
-                $p->amount,
+                number_format($p->amount / 100, 2),
                 $p->currency,
                 $p->status,
                 $p->created_at->format('Y-m-d H:i'),
@@ -89,7 +89,7 @@ class PaymentController extends Controller
             'amount' => ['required', 'numeric', 'min:1'],
         ]);
 
-        $payment->update(['amount' => $request->amount]);
+        $payment->update(['amount' => (int) round($request->amount * 100)]);
 
         return back()->with('status', 'Payment amount updated to ' . $payment->currencySymbol() . number_format($request->amount, 2) . '.');
     }

@@ -17,6 +17,10 @@
 
     
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <?php
+            $totalUnlockedLessons = $courses->filter(fn($c) => $c->isUnlockedFor($user))->sum(fn($c) => $c->lessons->count());
+            $overallPct = $totalUnlockedLessons > 0 ? round(($completedLessons / $totalUnlockedLessons) * 100) : 0;
+        ?>
         <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
             <div class="flex items-center gap-3">
                 <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
@@ -41,9 +45,19 @@
 <?php unset($__componentOriginald88937ee957874c050ccbc67a5e19575); ?>
 <?php endif; ?>
                 </div>
-                <div>
+                <div class="min-w-0 flex-1">
                     <p class="text-xs font-medium text-slate-500">Lessons Completed</p>
-                    <p class="text-2xl font-extrabold text-slate-900"><?php echo e($completedLessons); ?></p>
+                    <p class="text-2xl font-extrabold text-slate-900"><?php echo e($completedLessons); ?>
+
+                        <?php if($totalUnlockedLessons > 0): ?>
+                            <span class="text-sm font-medium text-slate-400">/ <?php echo e($totalUnlockedLessons); ?></span>
+                        <?php endif; ?>
+                    </p>
+                    <?php if($totalUnlockedLessons > 0): ?>
+                        <div class="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-slate-100">
+                            <div class="h-full rounded-full bg-emerald-500" style="width: <?php echo e($overallPct); ?>%"></div>
+                        </div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -185,16 +199,25 @@
                 </div>
             <?php endif; ?>
 
-            <div class="mt-6 space-y-1">
-                <?php $__currentLoopData = $courses->take(4); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $course): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+            <div class="mt-6 space-y-3">
+                <?php $__currentLoopData = $courses->take(5); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $course): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <?php
+                        $unlocked = $course->isUnlockedFor($user);
+                        $prog     = $courseProgress[$course->id] ?? ['completed' => 0, 'total' => 0, 'pct' => 0];
+                    ?>
                     <a href="<?php echo e(route('member.courses.show', $course)); ?>"
-                       class="flex items-center justify-between rounded-xl px-3 py-2.5 transition hover:bg-slate-50">
-                        <div class="flex items-center gap-3">
-                            <span class="badge badge-level-<?php echo e($course->level); ?> !px-2 !py-0.5 !text-[10px]"><?php echo e($course->levelLabel()); ?></span>
-                            <span class="text-sm font-medium text-slate-700"><?php echo e($course->title); ?></span>
-                        </div>
-                        <?php if($course->isUnlockedFor($user)): ?>
-                            <?php if (isset($component)) { $__componentOriginald88937ee957874c050ccbc67a5e19575 = $component; } ?>
+                       class="block rounded-xl border border-slate-100 px-4 py-3 transition hover:border-brand-200 hover:bg-brand-50">
+                        <div class="flex items-center justify-between gap-3">
+                            <div class="flex items-center gap-2 min-w-0">
+                                <span class="badge badge-level-<?php echo e($course->level); ?> !px-2 !py-0.5 !text-[10px] shrink-0"><?php echo e($course->levelLabel()); ?></span>
+                                <span class="truncate text-sm font-semibold text-slate-800"><?php echo e($course->title); ?></span>
+                            </div>
+                            <div class="flex shrink-0 items-center gap-1.5">
+                                <?php if($unlocked): ?>
+                                    <span class="text-xs font-bold <?php echo e($prog['pct'] === 100 ? 'text-emerald-600' : 'text-brand-600'); ?>">
+                                        <?php echo e($prog['pct']); ?>%
+                                    </span>
+                                    <?php if (isset($component)) { $__componentOriginald88937ee957874c050ccbc67a5e19575 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginald88937ee957874c050ccbc67a5e19575 = $attributes; } ?>
 <?php $component = App\View\Components\Icon::resolve(['name' => 'unlock','class' => 'h-4 w-4 text-emerald-500'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('icon'); ?>
@@ -214,8 +237,8 @@
 <?php $component = $__componentOriginald88937ee957874c050ccbc67a5e19575; ?>
 <?php unset($__componentOriginald88937ee957874c050ccbc67a5e19575); ?>
 <?php endif; ?>
-                        <?php else: ?>
-                            <?php if (isset($component)) { $__componentOriginald88937ee957874c050ccbc67a5e19575 = $component; } ?>
+                                <?php else: ?>
+                                    <?php if (isset($component)) { $__componentOriginald88937ee957874c050ccbc67a5e19575 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginald88937ee957874c050ccbc67a5e19575 = $attributes; } ?>
 <?php $component = App\View\Components\Icon::resolve(['name' => 'lock','class' => 'h-4 w-4 text-slate-400'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('icon'); ?>
@@ -235,6 +258,19 @@
 <?php $component = $__componentOriginald88937ee957874c050ccbc67a5e19575; ?>
 <?php unset($__componentOriginald88937ee957874c050ccbc67a5e19575); ?>
 <?php endif; ?>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                        <?php if($unlocked && $prog['total'] > 0): ?>
+                            <div class="mt-2">
+                                <div class="h-1.5 w-full overflow-hidden rounded-full bg-slate-100">
+                                    <div class="h-full rounded-full transition-all <?php echo e($prog['pct'] === 100 ? 'bg-emerald-500' : 'bg-brand-500'); ?>"
+                                         style="width: <?php echo e($prog['pct']); ?>%"></div>
+                                </div>
+                                <p class="mt-1 text-[10px] text-slate-400"><?php echo e($prog['completed']); ?> / <?php echo e($prog['total']); ?> lessons complete</p>
+                            </div>
+                        <?php elseif($unlocked && $prog['total'] === 0): ?>
+                            <p class="mt-1 text-[10px] text-slate-400">No lessons added yet</p>
                         <?php endif; ?>
                     </a>
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>

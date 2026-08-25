@@ -35,6 +35,14 @@ class CourseController extends Controller
                 ->store('courses/covers', 'public');
         }
 
+        // Handle promo video path from chunked uploader
+        if ($request->filled('promo_video_path')) {
+            $path = $request->input('promo_video_path');
+            if (Storage::disk('public')->exists($path)) {
+                $data['promo_video_path'] = $path;
+            }
+        }
+
         Course::create($data);
 
         return redirect()->route('admin.courses.index')->with('status', 'Course created.');
@@ -58,6 +66,17 @@ class CourseController extends Controller
                 ->store('courses/covers', 'public');
         }
 
+        // Handle promo video replacement
+        if ($request->filled('promo_video_path')) {
+            $path = $request->input('promo_video_path');
+            if (Storage::disk('public')->exists($path)) {
+                if ($course->promo_video_path && $course->promo_video_path !== $path) {
+                    Storage::disk('public')->delete($course->promo_video_path);
+                }
+                $data['promo_video_path'] = $path;
+            }
+        }
+
         $course->update($data);
 
         return redirect()->route('admin.courses.index')->with('status', 'Course updated.');
@@ -68,9 +87,12 @@ class CourseController extends Controller
         if ($course->cover_image) {
             Storage::disk('public')->delete($course->cover_image);
         }
+        if ($course->promo_video_path) {
+            Storage::disk('public')->delete($course->promo_video_path);
+        }
         $course->delete();
 
-        return back()->with('status', 'Course deleted.');
+        return redirect()->route('admin.courses.index')->with('status', 'Course deleted successfully.');
     }
 
     protected function validated(Request $request): array
@@ -84,14 +106,13 @@ class CourseController extends Controller
             'published'       => ['nullable', 'boolean'],
             'order'           => ['nullable', 'integer'],
             'cover_image'     => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
-            'promo_video_url' => ['nullable', 'url', 'max:500'],
+            'promo_video_path' => ['nullable', 'string', 'max:500'],
         ]);
 
-        $data['price']           = (int) round(($data['price'] ?? 0) * 100);
-        $data['is_free']         = $request->boolean('is_free');
-        $data['published']       = $request->boolean('published');
-        $data['order']           = $data['order'] ?? 0;
-        $data['promo_video_url'] = $request->input('promo_video_url') ?: null;
+        $data['price']     = (int) round(($data['price'] ?? 0) * 100);
+        $data['is_free']   = $request->boolean('is_free');
+        $data['published'] = $request->boolean('published');
+        $data['order']     = $data['order'] ?? 0;
 
         // Remove file from $data — handled separately in store/update
         unset($data['cover_image']);

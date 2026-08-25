@@ -97,55 +97,6 @@
             </form>
         </div>
 
-        {{-- ── Course Pricing ── --}}
-        <div class="card overflow-hidden">
-            <div class="border-b border-slate-100 bg-slate-50 px-6 py-4">
-                <div class="flex items-center gap-3">
-                    <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-50 text-brand-600">
-                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
-                    </div>
-                    <div>
-                        <h2 class="text-sm font-extrabold uppercase tracking-wide text-slate-700">Course Prices</h2>
-                        <p class="text-xs text-slate-500">Stored in USD{{ $currency === 'TZS' ? ' · TZS equivalent shown' : '' }}</p>
-                    </div>
-                </div>
-            </div>
-
-            @if($courses->isEmpty())
-                <p class="px-6 py-8 text-sm text-slate-500">No courses found.</p>
-            @else
-                <form method="POST" action="{{ route('admin.pricing.courses') }}" class="p-6">
-                    @csrf
-                    @method('PUT')
-                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                        @foreach($courses as $course)
-                            <div class="rounded-xl border border-slate-200 bg-slate-50 p-4">
-                                <div class="mb-3">
-                                    <p class="truncate font-semibold text-slate-900 text-sm">{{ $course->title }}</p>
-                                    <span class="badge badge-level-{{ $course->level }} mt-1 py-0 text-[10px]">{{ ucfirst($course->level) }}</span>
-                                </div>
-                                <div class="relative">
-                                    <span class="pointer-events-none absolute inset-y-0 left-3 flex items-center text-slate-400 text-sm">$</span>
-                                    <input type="number" name="prices[{{ $course->id }}]"
-                                           value="{{ number_format((float)$course->price, 2, '.', '') }}"
-                                           step="0.01" min="0" class="input pl-7 py-2 text-sm">
-                                </div>
-                                @if($currency === 'TZS')
-                                    <p class="mt-1.5 text-xs font-medium text-brand-600">≈ {{ $fmt($course->price) }}</p>
-                                @endif
-                            </div>
-                        @endforeach
-                    </div>
-                    <div class="mt-5 flex justify-end">
-                        <button type="submit" class="btn-primary px-6 py-2">
-                            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                            Save Course Prices
-                        </button>
-                    </div>
-                </form>
-            @endif
-        </div>
-
         {{-- ── Robot / EA Pricing ── --}}
         <div class="card overflow-hidden">
             <div class="border-b border-slate-100 bg-slate-50 px-6 py-4">

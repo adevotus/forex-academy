@@ -212,7 +212,7 @@
                                     <p class="text-xs text-slate-400 mt-0.5">{{ $payment->created_at->format('M j, Y') }}</p>
                                 </div>
                                 <div class="flex items-center gap-3 flex-shrink-0">
-                                    <span class="text-sm font-bold text-slate-800">${{ number_format($payment->amount, 2) }}</span>
+                                    <span class="text-sm font-bold text-slate-800">{{ $payment->amountFormatted() }}</span>
                                     @if($payment->status === 'approved')
                                         <span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 border border-emerald-200 text-emerald-700">Approved</span>
                                     @elseif($payment->status === 'pending')
@@ -248,6 +248,48 @@
                                     <p class="text-sm font-medium text-slate-900 truncate">{{ $courseName }}</p>
                                 </div>
                                 <span class="text-sm font-bold text-violet-700 flex-shrink-0">{{ $count }} lesson{{ $count !== 1 ? 's' : '' }}</span>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
+            </div>
+
+            {{-- Courses Unlocked --}}
+            <div class="card overflow-hidden">
+                <div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
+                    <h2 class="text-sm font-semibold text-slate-700 uppercase tracking-wide">Courses Unlocked</h2>
+                    <span class="text-xs text-slate-400">{{ $unlockedCourses->count() }} course{{ $unlockedCourses->count() !== 1 ? 's' : '' }}</span>
+                </div>
+                @if($unlockedCourses->isEmpty())
+                    <div class="px-5 py-8 text-center text-sm text-slate-400">No courses unlocked yet.</div>
+                @else
+                    <div class="divide-y divide-slate-100">
+                        @foreach($unlockedCourses as $item)
+                            <div class="px-5 py-3 flex items-center gap-4">
+                                @if($item['course']->cover_image)
+                                    <img src="{{ asset('storage/'.$item['course']->cover_image) }}"
+                                         class="h-10 w-10 rounded-lg object-cover flex-shrink-0 ring-1 ring-slate-200" alt="">
+                                @else
+                                    <div class="h-10 w-10 rounded-lg bg-brand-50 border border-brand-100 flex items-center justify-center flex-shrink-0">
+                                        <svg class="h-5 w-5 text-brand-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                                        </svg>
+                                    </div>
+                                @endif
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-semibold text-slate-900 truncate">{{ $item['course']->title }}</p>
+                                    <p class="text-xs text-slate-400 mt-0.5">
+                                        <span class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-medium text-slate-600 mr-1">{{ ucfirst($item['course']->level) }}</span>
+                                        Unlocked {{ $item['unlocked_at']?->format('M j, Y') ?? '—' }}
+                                    </p>
+                                </div>
+                                <div class="flex items-center gap-2 flex-shrink-0">
+                                    <span class="text-sm font-bold text-slate-800">{{ $item['amount'] }}</span>
+                                    <span class="inline-flex items-center gap-1 rounded-full bg-emerald-50 border border-emerald-200 px-2 py-0.5 text-[10px] font-semibold text-emerald-700">
+                                        <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"/></svg>
+                                        Unlocked
+                                    </span>
+                                </div>
                             </div>
                         @endforeach
                     </div>

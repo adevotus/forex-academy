@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\EnsureUserIsAdmin;
 use App\Http\Middleware\EnsureUserIsApprovedMember;
+use App\Http\Middleware\TrackSiteVisit;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -17,6 +18,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => EnsureUserIsAdmin::class,
             'member.approved' => EnsureUserIsApprovedMember::class,
         ]);
+
+        // Track site visitors on all web requests (middleware skips admin/api internally)
+        $middleware->appendToGroup('web', TrackSiteVisit::class);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

@@ -12,6 +12,7 @@ class Course extends Model
     protected $fillable = [
         'title', 'slug', 'description', 'level', 'thumbnail',
         'price', 'is_free', 'published', 'order',
+        'cover_image', 'promo_video_path',
     ];
 
     protected function casts(): array
@@ -52,6 +53,6 @@ class Course extends Model
 
     public function priceFormatted(): string
     {
-        return $this->is_free ? 'Free' : '$'.number_format($this->price, 2);
+        return $this->is_free ? 'Free' : '$'.number_format($this->price / 100, 2);
     }
 }
