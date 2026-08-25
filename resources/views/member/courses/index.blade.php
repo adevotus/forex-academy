@@ -134,16 +134,8 @@
             {{-- Two-column body --}}
             <div class="flex flex-col sm:flex-row divide-y sm:divide-y-0 sm:divide-x divide-slate-100">
 
-                {{-- LEFT — Payment details --}}
-                @php
-                    $payInfo  = \App\Models\Setting::get('payment_instructions', '');
-                    $bankName = \App\Models\Setting::get('bank_name', '');
-                    $accName  = \App\Models\Setting::get('account_name', '');
-                    $accNum   = \App\Models\Setting::get('account_number', '');
-                    $mobile   = \App\Models\Setting::get('mobile_money', '');
-                    $swift    = \App\Models\Setting::get('swift_code', '');
-                @endphp
-                <div class="flex flex-col gap-5 bg-slate-50 p-6 sm:w-72 sm:flex-shrink-0">
+                {{-- LEFT — Payment methods from PaymentMethod table --}}
+                <div class="flex flex-col gap-4 bg-slate-50 p-5 sm:w-72 sm:flex-shrink-0 overflow-y-auto" style="max-height:80vh">
 
                     {{-- Amount --}}
                     <div class="flex items-center gap-3 rounded-xl border border-brand-100 bg-white px-4 py-3 shadow-sm">
@@ -156,84 +148,64 @@
                         </div>
                     </div>
 
-                    {{-- Payment methods --}}
+                    {{-- Payment methods from PaymentMethod table --}}
                     <div class="space-y-3">
                         <p class="text-[10px] font-semibold uppercase tracking-widest text-slate-400">How to Pay</p>
 
-                        {{-- ① Bank Transfer — always shown --}}
-                        <div class="overflow-hidden rounded-xl border border-blue-100 bg-white shadow-sm">
-                            {{-- header --}}
-                            <div class="flex items-center gap-2 border-b border-blue-50 bg-blue-50 px-3.5 py-2.5">
-                                <div class="flex h-6 w-6 items-center justify-center rounded-lg bg-blue-600">
-                                    <svg class="h-3.5 w-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+                        @forelse($paymentMethods as $method)
+                            @php
+                                $filledDetails = collect($method->details ?? [])->filter(fn($d) => !empty($d['label'] ?? '') || !empty($d['value'] ?? ''))->values();
+                                $headerBg = match($method->icon_color) {
+                                    'emerald' => 'bg-emerald-50 border-emerald-100',
+                                    'blue'    => 'bg-blue-50 border-blue-100',
+                                    'gold'    => 'bg-yellow-50 border-yellow-100',
+                                    'purple'  => 'bg-purple-50 border-purple-100',
+                                    default   => 'bg-slate-50 border-slate-100',
+                                };
+                                $iconBg = match($method->icon_color) {
+                                    'emerald' => 'bg-emerald-600',
+                                    'blue'    => 'bg-blue-600',
+                                    'gold'    => 'bg-yellow-500',
+                                    'purple'  => 'bg-purple-600',
+                                    default   => 'bg-slate-700',
+                                };
+                            @endphp
+                            <div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+                                <div class="flex items-center gap-2 border-b px-3.5 py-2.5 {{ $headerBg }}">
+                                    <div class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-lg text-xs font-extrabold text-white {{ $iconBg }}">
+                                        {{ $method->typeIcon() }}
+                                    </div>
+                                    <div class="min-w-0">
+                                        <span class="block text-xs font-bold text-slate-800">{{ $method->name }}</span>
+                                        @if($method->subtitle)
+                                            <span class="text-[10px] text-slate-500">{{ $method->subtitle }}</span>
+                                        @endif
+                                    </div>
                                 </div>
-                                <span class="text-xs font-bold text-blue-800">Bank Transfer</span>
-                            </div>
-                            {{-- rows --}}
-                            <div class="divide-y divide-slate-50 px-3.5 py-1">
-                                <div class="flex items-center justify-between gap-2 py-2">
-                                    <span class="text-[11px] text-slate-400">Bank</span>
-                                    <span class="text-right text-[11px] font-semibold text-slate-800">{{ $bankName ?: '—' }}</span>
-                                </div>
-                                <div class="flex items-center justify-between gap-2 py-2">
-                                    <span class="text-[11px] text-slate-400">Account Name</span>
-                                    <span class="text-right text-[11px] font-semibold text-slate-800">{{ $accName ?: '—' }}</span>
-                                </div>
-                                <div class="flex items-center justify-between gap-2 py-2">
-                                    <span class="text-[11px] text-slate-400">Account No.</span>
-                                    <span class="text-right font-mono text-[12px] font-bold text-slate-900 tracking-wide select-all">{{ $accNum ?: '—' }}</span>
-                                </div>
-                                @if($swift)
-                                <div class="flex items-center justify-between gap-2 py-2">
-                                    <span class="text-[11px] text-slate-400">SWIFT / BIC</span>
-                                    <span class="text-right font-mono text-[11px] font-semibold text-slate-700">{{ $swift }}</span>
-                                </div>
+                                @if($filledDetails->isNotEmpty())
+                                    <div class="divide-y divide-slate-50 px-3.5 py-1">
+                                        @foreach($filledDetails as $detail)
+                                            <div class="flex items-center justify-between gap-2 py-2">
+                                                <span class="text-[11px] text-slate-400">{{ $detail['label'] ?? '' }}</span>
+                                                <span class="text-right font-mono text-[11px] font-bold text-slate-900 select-all">{{ ($detail['value'] ?: '—') }}</span>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @else
+                                    <p class="px-3.5 py-2.5 text-[11px] italic text-slate-400">Contact admin for details.</p>
+                                @endif
+                                @if($method->note)
+                                    <p class="border-t border-slate-50 px-3.5 pb-2.5 pt-2 text-[10px] text-slate-400">{{ $method->note }}</p>
                                 @endif
                             </div>
-                        </div>
-
-                        {{-- ② Mobile Money — always shown --}}
-                        <div class="overflow-hidden rounded-xl border border-emerald-100 bg-white shadow-sm">
-                            {{-- header --}}
-                            <div class="flex items-center gap-2 border-b border-emerald-50 bg-emerald-50 px-3.5 py-2.5">
-                                <div class="flex h-6 w-6 items-center justify-center rounded-lg bg-emerald-600">
-                                    <svg class="h-3.5 w-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
-                                </div>
-                                <span class="text-xs font-bold text-emerald-800">Mobile Money</span>
+                        @empty
+                            <div class="rounded-xl border border-dashed border-slate-200 bg-white p-4 text-center">
+                                <p class="text-xs text-slate-400">No payment methods configured yet.</p>
                             </div>
-                            {{-- rows --}}
-                            <div class="divide-y divide-slate-50 px-3.5 py-1">
-                                <div class="flex items-center justify-between gap-2 py-2">
-                                    <span class="text-[11px] text-slate-400">Number</span>
-                                    <span class="text-right font-mono text-[12px] font-bold text-slate-900 tracking-wide select-all">{{ $mobile ?: '—' }}</span>
-                                </div>
-                                @php $mobileName = \App\Models\Setting::get('mobile_money_name', ''); @endphp
-                                @if($mobileName)
-                                <div class="flex items-center justify-between gap-2 py-2">
-                                    <span class="text-[11px] text-slate-400">Name</span>
-                                    <span class="text-right text-[11px] font-semibold text-slate-800">{{ $mobileName }}</span>
-                                </div>
-                                @endif
-                                @php $mobileProvider = \App\Models\Setting::get('mobile_money_provider', ''); @endphp
-                                @if($mobileProvider)
-                                <div class="flex items-center justify-between gap-2 py-2">
-                                    <span class="text-[11px] text-slate-400">Provider</span>
-                                    <span class="text-right text-[11px] font-semibold text-slate-800">{{ $mobileProvider }}</span>
-                                </div>
-                                @endif
-                            </div>
-                        </div>
-
-                        {{-- Extra instructions if set --}}
-                        @if($payInfo)
-                        <div class="rounded-xl border border-amber-100 bg-amber-50 px-3.5 py-2.5 text-[11px] leading-relaxed text-amber-800">
-                            <span class="font-semibold">Note: </span>{{ $payInfo }}
-                        </div>
-                        @endif
+                        @endforelse
                     </div>
 
-                    {{-- Footer note --}}
-                    <p class="mt-auto pt-4 text-[10px] leading-relaxed text-slate-400">
+                    <p class="text-[10px] leading-relaxed text-slate-400">
                         After paying, upload your receipt on the right. Admin will verify and unlock the course within 24 hours.
                     </p>
                 </div>

@@ -7,6 +7,7 @@ use App\Models\Course;
 use App\Models\Lesson;
 use App\Models\LessonProgress;
 use App\Models\Payment;
+use App\Models\PaymentMethod;
 use App\Models\QuizAttempt;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -26,7 +27,9 @@ class CourseController extends Controller
             $courses = $query->get()->groupBy('level');
         }
 
-        return view('member.courses.index', compact('courses'));
+        $paymentMethods = PaymentMethod::active()->get();
+
+        return view('member.courses.index', compact('courses', 'paymentMethods'));
     }
 
     public function show(Course $course): View
@@ -40,8 +43,9 @@ class CourseController extends Controller
             ->pluck('lesson_id');
 
         $unlocked = $course->isUnlockedFor($user);
+        $paymentMethods = PaymentMethod::active()->get();
 
-        return view('member.courses.show', compact('course', 'progress', 'unlocked'));
+        return view('member.courses.show', compact('course', 'progress', 'unlocked', 'paymentMethods'));
     }
 
     public function lesson(Course $course, Lesson $lesson): View|RedirectResponse
