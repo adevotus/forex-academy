@@ -1,12 +1,19 @@
-<x-layouts.public title="EMMIOXFOREX ACADEMY | Learn. Trade. Automate. Grow.">
+<?php if (isset($component)) { $__componentOriginal8c0e86a062c1c5bb6d0e151b7076f3fd = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal8c0e86a062c1c5bb6d0e151b7076f3fd = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.layouts.public','data' => ['title' => 'EMMIOXFOREX ACADEMY | Learn. Trade. Automate. Grow.']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('layouts.public'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['title' => 'EMMIOXFOREX ACADEMY | Learn. Trade. Automate. Grow.']); ?>
 
-    {{-- ═══════════════════════════════════════════════════
-         HERO
-    ═══════════════════════════════════════════════════ --}}
+    
     <section class="relative px-4 pb-28 pt-20 sm:px-6 lg:px-8">
         <div class="mx-auto max-w-4xl text-center">
 
-            {{-- Eyebrow badge --}}
+            
             <h1 class="mt-6 text-5xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-6xl lg:text-7xl">
                 Learn to trade forex the
                 <span class="bg-gradient-to-r from-brand-500 via-brand-400 to-gold-500 bg-clip-text text-transparent"> structured, guided</span>
@@ -19,14 +26,14 @@
             </p>
 
             <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
-                <a href="{{ route('register') }}" class="btn-primary px-7 py-3 text-base">
+                <a href="<?php echo e(route('register')); ?>" class="btn-primary px-7 py-3 text-base">
                     Start Your Journey
                     <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                 </a>
-                <a href="{{ route('courses.index') }}" class="btn-outline px-7 py-3 text-base">Browse Courses</a>
+                <a href="<?php echo e(route('courses.index')); ?>" class="btn-outline px-7 py-3 text-base">Browse Courses</a>
             </div>
 
-            {{-- Stats row --}}
+            
             <div id="stats-row" class="mx-auto mt-16 grid max-w-2xl grid-cols-2 gap-px overflow-hidden rounded-2xl border border-slate-200 shadow-card sm:grid-cols-4">
                 <div class="bg-white px-6 py-5 text-center">
                     <div class="text-2xl font-extrabold text-slate-900" data-count="4">0</div>
@@ -48,9 +55,7 @@
         </div>
     </section>
 
-    {{-- ═══════════════════════════════════════════════════
-         WHAT WE OFFER
-    ═══════════════════════════════════════════════════ --}}
+    
     <section class="bg-slate-50 px-4 py-24 sm:px-6 lg:px-8">
         <div class="mx-auto max-w-7xl">
             <div class="mx-auto max-w-2xl text-center">
@@ -63,31 +68,29 @@
             </div>
 
             <div class="mt-14 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                @foreach ([
+                <?php $__currentLoopData = [
                     ['M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253', 'Online Forex Classes', 'Starter to Pro courses covering technical analysis, risk management, psychology and strategy.', 'bg-brand-50 text-brand-500 ring-brand-100'],
                     ['M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18', 'Robot Subscription', 'Access the Financial Magnetic Robot EA for systematic, disciplined trade execution.', 'bg-gold-50 text-gold-500 ring-amber-100'],
                     ['M17 20h5v-2a3 3 0 0 0-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 0 1 5.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 0 1 9.288 0M15 7a3 3 0 1 1-6 0 3 3 0 0 1 6 0z', 'Professional Mentorship', 'Personalised guidance to build discipline and structured trading strategies.', 'bg-violet-50 text-violet-500 ring-violet-100'],
                     ['M13 7h8m0 0v8m0-8l-8 8-4-4-6 6', '3-Month Signal Subscription', 'Market setups with entry, stop-loss and take-profit — plus the reasoning behind each call.', 'bg-emerald-50 text-emerald-500 ring-emerald-100'],
                     ['M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z', 'Account Management', 'Structured trading-account management for eligible clients under clear risk parameters.', 'bg-rose-50 text-rose-500 ring-rose-100'],
                     ['M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z', 'Account Flipping', 'Aggressive growth strategies for eligible clients who accept the associated risk.', 'bg-amber-50 text-amber-500 ring-amber-100'],
-                ] as [$path, $title, $desc, $iconClass])
+                ]; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as [$path, $title, $desc, $iconClass]): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <div class="card-hover group p-7 transition">
-                        <div class="flex h-12 w-12 items-center justify-center rounded-xl ring-1 {{ $iconClass }}">
+                        <div class="flex h-12 w-12 items-center justify-center rounded-xl ring-1 <?php echo e($iconClass); ?>">
                             <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="{{ $path }}"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" d="<?php echo e($path); ?>"/>
                             </svg>
                         </div>
-                        <h3 class="mt-5 text-base font-bold text-slate-900 group-hover:text-brand-600 transition">{{ $title }}</h3>
-                        <p class="mt-2 text-sm leading-relaxed text-slate-500">{{ $desc }}</p>
+                        <h3 class="mt-5 text-base font-bold text-slate-900 group-hover:text-brand-600 transition"><?php echo e($title); ?></h3>
+                        <p class="mt-2 text-sm leading-relaxed text-slate-500"><?php echo e($desc); ?></p>
                     </div>
-                @endforeach
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </div>
         </div>
     </section>
 
-    {{-- ═══════════════════════════════════════════════════
-         LEARNING PATH
-    ═══════════════════════════════════════════════════ --}}
+    
     <section class="px-4 py-24 sm:px-6 lg:px-8">
         <div class="mx-auto max-w-7xl">
             <div class="mx-auto max-w-2xl text-center">
@@ -100,34 +103,32 @@
             </div>
 
             <div class="relative mt-14">
-                {{-- Connector line (desktop) --}}
+                
                 <div class="absolute left-0 right-0 top-8 hidden h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent lg:block" style="margin: 0 12.5%"></div>
 
                 <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                    @foreach ([
+                    <?php $__currentLoopData = [
                         ['starter',      'Starter',      'Market basics & terminology',    'bg-emerald-50 text-emerald-700 ring-emerald-200', 'text-emerald-600'],
                         ['intermediate', 'Intermediate', 'Charts, indicators, risk',       'bg-brand-50 text-brand-700 ring-brand-200',       'text-brand-600'],
                         ['advanced',     'Advanced',     'Strategy & psychology',          'bg-violet-50 text-violet-700 ring-violet-200',    'text-violet-600'],
                         ['pro',          'Pro',          'Automation & account flipping',  'bg-amber-50 text-amber-700 ring-amber-200',       'text-amber-600'],
-                    ] as $i => [$level, $label, $desc, $badgeClass, $numClass])
+                    ]; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $i => [$level, $label, $desc, $badgeClass, $numClass]): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <div class="card relative p-6 text-center">
                             <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full border-4 border-white bg-white shadow-card ring-2 ring-slate-200">
-                                <span class="text-lg font-extrabold {{ $numClass }}">{{ $i + 1 }}</span>
+                                <span class="text-lg font-extrabold <?php echo e($numClass); ?>"><?php echo e($i + 1); ?></span>
                             </div>
-                            <span class="badge badge-level-{{ $level }}">Level {{ $i + 1 }}</span>
-                            <h3 class="mt-4 text-base font-bold text-slate-900">{{ $label }}</h3>
-                            <p class="mt-1.5 text-sm text-slate-500">{{ $desc }}</p>
+                            <span class="badge badge-level-<?php echo e($level); ?>">Level <?php echo e($i + 1); ?></span>
+                            <h3 class="mt-4 text-base font-bold text-slate-900"><?php echo e($label); ?></h3>
+                            <p class="mt-1.5 text-sm text-slate-500"><?php echo e($desc); ?></p>
                         </div>
-                    @endforeach
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </div>
             </div>
         </div>
     </section>
 
-    {{-- ═══════════════════════════════════════════════════
-         FEATURED COURSES
-    ═══════════════════════════════════════════════════ --}}
-    @if ($courses->count())
+    
+    <?php if($courses->count()): ?>
     <section class="bg-slate-50 px-4 py-24 sm:px-6 lg:px-8">
         <div class="mx-auto max-w-7xl">
             <div class="flex flex-wrap items-end justify-between gap-4">
@@ -135,36 +136,34 @@
                     <h2 class="section-title">Featured Courses</h2>
                     <p class="mt-2 text-slate-500">Hand-picked to get you started fast.</p>
                 </div>
-                <a href="{{ route('courses.index') }}"
+                <a href="<?php echo e(route('courses.index')); ?>"
                    class="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-500 hover:text-brand-600 transition">
                     View all courses
                     <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                 </a>
             </div>
             <div class="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                @foreach ($courses as $course)
-                    <a href="{{ route('courses.show', $course) }}"
+                <?php $__currentLoopData = $courses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $course): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <a href="<?php echo e(route('courses.show', $course)); ?>"
                        class="card-hover group block overflow-hidden p-6 transition">
-                        <span class="badge badge-level-{{ $course->level }}">{{ $course->levelLabel() }}</span>
-                        <h3 class="mt-4 font-bold text-slate-900 group-hover:text-brand-600 transition">{{ $course->title }}</h3>
-                        <p class="mt-2 line-clamp-2 text-sm leading-relaxed text-slate-500">{{ $course->description }}</p>
+                        <span class="badge badge-level-<?php echo e($course->level); ?>"><?php echo e($course->levelLabel()); ?></span>
+                        <h3 class="mt-4 font-bold text-slate-900 group-hover:text-brand-600 transition"><?php echo e($course->title); ?></h3>
+                        <p class="mt-2 line-clamp-2 text-sm leading-relaxed text-slate-500"><?php echo e($course->description); ?></p>
                         <div class="mt-5 flex items-center justify-between border-t border-slate-100 pt-4 text-sm">
-                            <span class="font-bold text-slate-900">{{ $course->priceFormatted() }}</span>
-{{--                            <span class="flex items-center gap-1 text-slate-400">--}}
-{{--                                <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>--}}
-{{--                                {{ $course->lessons()->count() }} lessons--}}
-{{--                            </span>--}}
+                            <span class="font-bold text-slate-900"><?php echo e($course->priceFormatted()); ?></span>
+
+
+
+
                         </div>
                     </a>
-                @endforeach
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </div>
         </div>
     </section>
-    @endif
+    <?php endif; ?>
 
-    {{-- ═══════════════════════════════════════════════════
-         TRUST / WHY US
-    ═══════════════════════════════════════════════════ --}}
+    
     <section class="px-4 py-24 sm:px-6 lg:px-8">
         <div class="mx-auto max-w-7xl">
             <div class="grid grid-cols-1 items-center gap-16 lg:grid-cols-2">
@@ -178,27 +177,27 @@
                         We don't just sell courses  we provide a complete, end to end ecosystem that takes you from beginner to confident, tech-enabled trader.
                     </p>
                     <div class="mt-8 space-y-5">
-                        @foreach ([
+                        <?php $__currentLoopData = [
                             ['M13 7h8m0 0v8m0-8l-8 8-4-4-6 6', 'Structured, progressive curriculum', 'Four clear levels — Starter, Intermediate, Advanced, Pro — each building on the last.'],
                             ['M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18', 'Technology meets education', 'Automated EAs and live signals complement your classroom learning with real market exposure.'],
                             ['M17 20h5v-2a3 3 0 0 0-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 0 1 5.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 0 1 9.288 0M15 7a3 3 0 1 1-6 0 3 3 0 0 1 6 0z', 'Human guidance, not just videos', 'Mentors who trade are on hand to hold you accountable and speed up your development.'],
-                        ] as [$path, $title, $desc])
+                        ]; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as [$path, $title, $desc]): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <div class="flex gap-4">
                                 <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-brand-50 ring-1 ring-brand-100">
                                     <svg class="h-5 w-5 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="{{ $path }}"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="<?php echo e($path); ?>"/>
                                     </svg>
                                 </div>
                                 <div>
-                                    <p class="font-semibold text-slate-900">{{ $title }}</p>
-                                    <p class="mt-1 text-sm leading-relaxed text-slate-500">{{ $desc }}</p>
+                                    <p class="font-semibold text-slate-900"><?php echo e($title); ?></p>
+                                    <p class="mt-1 text-sm leading-relaxed text-slate-500"><?php echo e($desc); ?></p>
                                 </div>
                             </div>
-                        @endforeach
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </div>
                 </div>
 
-                {{-- Visual card stack --}}
+                
                 <div class="relative hidden lg:block">
                     <div class="absolute -left-4 top-6 w-56 rotate-[-4deg] card p-5 shadow-card">
                         <div class="flex items-center gap-3">
@@ -217,17 +216,17 @@
                             <span class="badge badge-level-intermediate">Intermediate</span>
                         </div>
                         <div class="space-y-3">
-                            @foreach ([['Technical Analysis', 80], ['Risk Management', 60], ['Trading Psychology', 35]] as [$label, $pct])
+                            <?php $__currentLoopData = [['Technical Analysis', 80], ['Risk Management', 60], ['Trading Psychology', 35]]; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as [$label, $pct]): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <div>
                                     <div class="mb-1.5 flex justify-between text-xs">
-                                        <span class="text-slate-600">{{ $label }}</span>
-                                        <span class="font-semibold text-slate-900">{{ $pct }}%</span>
+                                        <span class="text-slate-600"><?php echo e($label); ?></span>
+                                        <span class="font-semibold text-slate-900"><?php echo e($pct); ?>%</span>
                                     </div>
                                     <div class="h-1.5 overflow-hidden rounded-full bg-slate-100">
-                                        <div class="h-1.5 rounded-full bg-gradient-to-r from-brand-500 to-brand-300" style="width:{{ $pct }}%"></div>
+                                        <div class="h-1.5 rounded-full bg-gradient-to-r from-brand-500 to-brand-300" style="width:<?php echo e($pct); ?>%"></div>
                                     </div>
                                 </div>
-                            @endforeach
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </div>
                     </div>
                     <div class="absolute -right-4 bottom-6 w-52 rotate-[3deg] card p-4 shadow-card">
@@ -243,14 +242,12 @@
         </div>
     </section>
 
-    {{-- ═══════════════════════════════════════════════════
-         TESTIMONIALS
-    ═══════════════════════════════════════════════════ --}}
-    @if($testimonials->isNotEmpty())
+    
+    <?php if($testimonials->isNotEmpty()): ?>
     <section class="bg-navy-950 px-4 py-24 sm:px-6 lg:px-8">
         <div class="mx-auto max-w-7xl">
 
-            {{-- Header --}}
+            
             <div class="flex flex-wrap items-end justify-between gap-4">
                 <div class="mx-auto max-w-xl text-center lg:mx-0 lg:text-left">
                     <span class="badge border-white/15 bg-white/10 text-slate-300 mb-4 inline-flex">
@@ -260,31 +257,31 @@
                     <h2 class="text-3xl font-extrabold text-white sm:text-4xl">What our traders say</h2>
                     <p class="mt-3 text-base text-slate-400">Real results from real members of EMMIOXFOREX ACADEMY.</p>
                 </div>
-                <a href="{{ route('testimonials') }}"
+                <a href="<?php echo e(route('testimonials')); ?>"
                    class="inline-flex items-center gap-1.5 text-sm font-semibold text-gold-400 hover:text-gold-300 transition">
                     View all stories
                     <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                 </a>
             </div>
 
-            {{-- 3-column grid — always 3 on desktop --}}
+            
             <div class="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                @foreach($testimonials->take(3) as $t)
+                <?php $__currentLoopData = $testimonials->take(3); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $t): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <div class="flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm transition hover:border-white/25 hover:bg-white/8">
 
-                        {{-- ── Media (16:9 aspect ratio box) ── --}}
-                        @if($t->media_path)
+                        
+                        <?php if($t->media_path): ?>
                             <div class="relative w-full overflow-hidden" style="aspect-ratio:16/9; background:#0a0f1e">
-                                @if($t->isVideo())
-                                    <video src="{{ $t->mediaUrl() }}"
+                                <?php if($t->isVideo()): ?>
+                                    <video src="<?php echo e($t->mediaUrl()); ?>"
                                            controls preload="metadata"
                                            class="absolute inset-0 h-full w-full object-contain"></video>
-                                @else
-                                    <img src="{{ $t->mediaUrl() }}" alt="{{ $t->name }}"
+                                <?php else: ?>
+                                    <img src="<?php echo e($t->mediaUrl()); ?>" alt="<?php echo e($t->name); ?>"
                                          class="absolute inset-0 h-full w-full object-cover transition duration-300 hover:scale-105 cursor-zoom-in"
                                          onclick="openLightbox(this.src)">
-                                    {{-- Zoom icon overlay --}}
-                                    <button type="button" onclick="openLightbox('{{ $t->mediaUrl() }}')"
+                                    
+                                    <button type="button" onclick="openLightbox('<?php echo e($t->mediaUrl()); ?>')"
                                             class="absolute inset-0 flex items-center justify-center bg-black/0 hover:bg-black/40 transition-all group">
                                         <span class="scale-0 group-hover:scale-100 transition-transform duration-200 rounded-full bg-white/90 p-3 shadow-lg">
                                             <svg class="h-5 w-5 text-slate-800" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -292,81 +289,81 @@
                                             </svg>
                                         </span>
                                     </button>
-                                @endif
+                                <?php endif; ?>
                             </div>
-                        @else
-                            {{-- Decorative placeholder --}}
+                        <?php else: ?>
+                            
                             <div class="flex items-center justify-center bg-gradient-to-br from-brand-900/50 to-navy-900/80" style="aspect-ratio:16/9">
                                 <svg class="h-12 w-12 text-white/10" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
                             </div>
-                        @endif
+                        <?php endif; ?>
 
-                        {{-- ── Content ── --}}
+                        
                         <div class="flex flex-1 flex-col p-6">
 
-                            {{-- Stars --}}
-                            @if($t->rating)
+                            
+                            <?php if($t->rating): ?>
                                 <div class="flex gap-0.5 mb-4">
-                                    @for($i = 1; $i <= 5; $i++)
-                                        <svg class="h-4 w-4 {{ $i <= $t->rating ? 'text-gold-400' : 'text-white/15' }}"
+                                    <?php for($i = 1; $i <= 5; $i++): ?>
+                                        <svg class="h-4 w-4 <?php echo e($i <= $t->rating ? 'text-gold-400' : 'text-white/15'); ?>"
                                              fill="currentColor" viewBox="0 0 24 24">
                                             <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
                                         </svg>
-                                    @endfor
+                                    <?php endfor; ?>
                                 </div>
-                            @endif
+                            <?php endif; ?>
 
-                            {{-- Opening quote mark --}}
+                            
                             <svg class="h-6 w-6 text-brand-500/40 mb-2 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
                             </svg>
 
-                            {{-- Quote text --}}
+                            
                             <blockquote class="flex-1 text-sm leading-relaxed text-slate-300 line-clamp-4">
-                                {{ $t->content }}
+                                <?php echo e($t->content); ?>
+
                             </blockquote>
 
-                            {{-- Person --}}
+                            
                             <div class="mt-5 flex items-center gap-3 border-t border-white/10 pt-4">
-                                @if($t->isImage() && $t->media_path)
-                                    <img src="{{ $t->mediaUrl() }}" alt="{{ $t->name }}"
+                                <?php if($t->isImage() && $t->media_path): ?>
+                                    <img src="<?php echo e($t->mediaUrl()); ?>" alt="<?php echo e($t->name); ?>"
                                          class="h-10 w-10 flex-shrink-0 rounded-full object-cover ring-2 ring-white/20">
-                                @else
+                                <?php else: ?>
                                     <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-brand-600/20 text-sm font-bold text-brand-300 ring-2 ring-brand-500/20">
-                                        {{ $t->initial() }}
+                                        <?php echo e($t->initial()); ?>
+
                                     </div>
-                                @endif
+                                <?php endif; ?>
                                 <div>
-                                    <p class="text-sm font-semibold text-white">{{ $t->name }}</p>
-                                    @if($t->role)
-                                        <p class="text-xs text-slate-400">{{ $t->role }}</p>
-                                    @endif
+                                    <p class="text-sm font-semibold text-white"><?php echo e($t->name); ?></p>
+                                    <?php if($t->role): ?>
+                                        <p class="text-xs text-slate-400"><?php echo e($t->role); ?></p>
+                                    <?php endif; ?>
                                 </div>
                             </div>
 
                         </div>
                     </div>
-                @endforeach
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </div>
 
-            {{-- View all link (centered, below cards) --}}
-            @if($testimonials->count() > 3)
+            
+            <?php if($testimonials->count() > 3): ?>
             <div class="mt-10 text-center">
-                <a href="{{ route('testimonials') }}"
+                <a href="<?php echo e(route('testimonials')); ?>"
                    class="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-6 py-3 text-sm font-semibold text-slate-300 transition hover:bg-white/10 hover:text-white">
-                    Read all {{ $testimonials->count() }} member stories
+                    Read all <?php echo e($testimonials->count()); ?> member stories
                     <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                 </a>
             </div>
-            @endif
+            <?php endif; ?>
 
         </div>
     </section>
-    @endif
+    <?php endif; ?>
 
-    {{-- ═══════════════════════════════════════════════════
-         CTA
-    ═══════════════════════════════════════════════════ --}}
+    
     <section class="px-4 pb-28 sm:px-6 lg:px-8 mt-3">
         <div class="mx-auto max-w-5xl overflow-hidden rounded-3xl bg-gradient-to-br from-navy-950 via-navy-900 to-brand-900 px-10 py-16 text-center shadow-glow sm:px-16">
             <div class="pointer-events-none absolute inset-0 bg-grid-glow opacity-60"></div>
@@ -379,8 +376,8 @@
                 Register today, get approved, and unlock a structured path from Starter to Pro with robots, signals and mentorship along the way.
             </p>
             <div class="relative mt-10 flex flex-wrap items-center justify-center gap-4">
-                <a href="{{ route('register') }}" class="btn-gold px-8 py-3 text-base">Join EMMIOXFOREX ACADEMY</a>
-                <a href="{{ route('about') }}"    class="btn-outline-white px-8 py-3 text-base">Learn More</a>
+                <a href="<?php echo e(route('register')); ?>" class="btn-gold px-8 py-3 text-base">Join EMMIOXFOREX ACADEMY</a>
+                <a href="<?php echo e(route('about')); ?>"    class="btn-outline-white px-8 py-3 text-base">Learn More</a>
             </div>
         </div>
     </section>
@@ -416,7 +413,7 @@
 })();
 </script>
 
-    {{-- ── Image Lightbox (testimonial screenshots) ── --}}
+    
     <div id="img-lightbox"
          class="fixed inset-0 z-50 hidden items-center justify-center p-4"
          style="background:rgba(0,0,0,0.93)"
@@ -459,4 +456,14 @@
     });
     </script>
 
-</x-layouts.public>
+ <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal8c0e86a062c1c5bb6d0e151b7076f3fd)): ?>
+<?php $attributes = $__attributesOriginal8c0e86a062c1c5bb6d0e151b7076f3fd; ?>
+<?php unset($__attributesOriginal8c0e86a062c1c5bb6d0e151b7076f3fd); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal8c0e86a062c1c5bb6d0e151b7076f3fd)): ?>
+<?php $component = $__componentOriginal8c0e86a062c1c5bb6d0e151b7076f3fd; ?>
+<?php unset($__componentOriginal8c0e86a062c1c5bb6d0e151b7076f3fd); ?>
+<?php endif; ?>
+<?php /**PATH D:\projects\emmiox-academy\emmiox-academy\resources\views/public/home.blade.php ENDPATH**/ ?>
