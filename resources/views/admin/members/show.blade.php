@@ -301,7 +301,7 @@
                 <div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between gap-3">
                     <div>
                         <h2 class="text-sm font-semibold text-slate-700 uppercase tracking-wide">Login Sessions</h2>
-                        <p class="text-xs text-slate-400 mt-0.5">Max 2 IPs allowed per account</p>
+                        <p class="text-xs text-slate-400 mt-0.5">Max 1 IP allowed per account</p>
                     </div>
                     @if($member->loginSessions->isNotEmpty())
                         <form method="POST" action="{{ route('admin.members.sessions.clear', $member) }}"

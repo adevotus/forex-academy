@@ -48,7 +48,7 @@
                 <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             </div>
             <div>
-                <p class="text-sm font-semibold text-blue-900">Proof submitted — under review</p>
+                <p class="text-sm font-semibold text-blue-900">Proof submitted  under review</p>
                 <p class="mt-0.5 text-xs text-blue-700">Our team is reviewing your payment. You'll get full access once confirmed, usually within a few hours.</p>
             </div>
         </div>

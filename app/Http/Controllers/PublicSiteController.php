@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Course;
 use App\Models\MentorshipSession;
 use App\Models\Robot;
+use App\Models\Setting;
 use App\Models\Testimonial;
 use Illuminate\View\View;
 
@@ -54,10 +55,13 @@ class PublicSiteController extends Controller
 
     public function pricing(): View
     {
-        $courses = Course::where('published', true)->orderBy('order')->get();
-        $robots = Robot::where('published', true)->get();
-        $mentorships = MentorshipSession::where('published', true)->get();
+        $courses          = Course::where('published', true)->orderBy('order')->get();
+        $robots           = Robot::where('published', true)->get();
+        $mentorships      = MentorshipSession::where('published', true)->get();
+        $registrationFee  = Setting::get('registration_fee', '300.00');
+        $signalPrice      = Setting::get('signal_price', '150.00');
+        $currency         = Setting::get('currency', 'USD');
 
-        return view('public.pricing', compact('courses', 'robots', 'mentorships'));
+        return view('public.pricing', compact('courses', 'robots', 'mentorships', 'registrationFee', 'signalPrice', 'currency'));
     }
 }

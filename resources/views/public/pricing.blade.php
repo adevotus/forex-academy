@@ -28,7 +28,7 @@
                         <p class="mt-2 text-slate-600">Unlocks your academy account after admin approval, including free Starter-level content access.</p>
                     </div>
                     <div class="flex flex-col items-center gap-4">
-                        <div class="text-4xl font-extrabold text-slate-900">$300.00</div>
+                        <div class="text-4xl font-extrabold text-slate-900">{{ $currency }} {{ $registrationFee }}</div>
                         <a href="{{ route('register') }}" class="btn-primary px-7 py-3">Register Now</a>
                     </div>
                 </div>
@@ -93,7 +93,7 @@
                             </div>
                             <h3 class="font-semibold text-slate-900">3-Month Signal Subscription</h3>
                         </div>
-                        <p class="mt-4 text-2xl font-extrabold text-slate-900">$250.00</p>
+                        <p class="mt-4 text-2xl font-extrabold text-slate-900">{{ $currency }} {{ $signalPrice }}</p>
                     </div>
                     @foreach ($mentorships as $m)
                         <div class="card p-5">

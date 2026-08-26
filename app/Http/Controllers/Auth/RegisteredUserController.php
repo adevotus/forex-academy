@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\Payment;
+use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -40,12 +41,10 @@ class RegisteredUserController extends Controller
             'status' => 'pending',
         ]);
 
-        // Registration fee payment request is created immediately so the
-        // Admin can see and approve it from the Payments queue.
         Payment::create([
             'user_id' => $user->id,
             'type' => 'registration',
-            'amount' => 5000, // $50.00 registration fee — adjust in Admin > Settings/Pricing
+            'amount' => (int) round((float) Setting::get('registration_fee', '300') * 100),
             'status' => 'pending',
         ]);
 

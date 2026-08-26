@@ -20,7 +20,7 @@ class PricingController extends Controller
             'robots'      => Robot::orderBy('name')->get(),
             'mentorships' => MentorshipSession::orderBy('title')->get(),
             'settings'    => [
-                'registration_fee' => Setting::get('registration_fee', '50.00'),
+                'registration_fee' => Setting::get('registration_fee', '300.00'),
                 'signal_price'     => Setting::get('signal_price', '150.00'),
                 'currency'         => Setting::get('currency', 'USD'),
                 'usd_to_tzs'       => Setting::get('usd_to_tzs', '2600'),

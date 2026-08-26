@@ -29,7 +29,7 @@
         </div>
     @endif
 
-    <form id="robot-form" method="POST"
+    <form id="robot-form" method="POST" enctype="multipart/form-data"
           action="{{ $robot->exists ? route('admin.robots.update', $robot) : route('admin.robots.store') }}">
         @csrf
         @if ($robot->exists) @method('PUT') @endif
@@ -37,20 +37,68 @@
         {{-- Two-column layout --}}
         <div class="grid grid-cols-2 gap-4">
 
-            {{-- LEFT: Basic info --}}
-            <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm space-y-4">
-                <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400">Basic Information</h2>
+            {{-- LEFT: Basic info + Image --}}
+            <div class="space-y-4">
+                <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm space-y-4">
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400">Basic Information</h2>
 
-                <div>
-                    <label class="mb-1 block text-sm font-semibold text-slate-700">Robot / EA Name <span class="text-rose-500">*</span></label>
-                    <input type="text" name="name" value="{{ old('name', $robot->name) }}"
-                           class="input w-full" placeholder="e.g. EmmioPro EA v3" required>
+                    <div>
+                        <label class="mb-1 block text-sm font-semibold text-slate-700">Robot / EA Name <span class="text-rose-500">*</span></label>
+                        <input type="text" name="name" value="{{ old('name', $robot->name) }}"
+                               class="input w-full" placeholder="e.g. EmmioPro EA v3" required>
+                    </div>
+
+                    <div>
+                        <label class="mb-1 block text-sm font-semibold text-slate-700">Description</label>
+                        <textarea name="description" rows="4" class="input w-full resize-none"
+                                  placeholder="What this robot does, strategy, pairs it trades…">{{ old('description', $robot->description) }}</textarea>
+                    </div>
                 </div>
 
-                <div>
-                    <label class="mb-1 block text-sm font-semibold text-slate-700">Description</label>
-                    <textarea name="description" rows="5" class="input w-full resize-none"
-                              placeholder="What this robot does, strategy, pairs it trades…">{{ old('description', $robot->description) }}</textarea>
+                {{-- Robot Image Upload --}}
+                <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm space-y-3">
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400">Robot Image</h2>
+
+                    {{-- Current image preview --}}
+                    @if($robot->exists && $robot->image)
+                        <div id="current-img-wrap" class="relative w-full overflow-hidden rounded-xl border border-slate-200 bg-slate-50">
+                            <img id="current-img"
+                                 src="{{ Storage::disk('public')->url($robot->image) }}"
+                                 alt="{{ $robot->name }}"
+                                 class="h-44 w-full object-cover">
+                            <div class="absolute inset-0 flex items-end p-3 bg-gradient-to-t from-black/40 to-transparent">
+                                <span class="text-xs font-medium text-white/90">Current image — upload a new one to replace</span>
+                            </div>
+                        </div>
+                    @endif
+
+                    {{-- Upload zone --}}
+                    <label id="img-drop-zone"
+                           class="flex cursor-pointer flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed border-slate-200 bg-slate-50 p-6 text-center transition hover:border-brand-400 hover:bg-brand-50">
+
+                        <div id="img-dz-idle" class="flex flex-col items-center gap-2">
+                            <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-white shadow-sm border border-slate-200">
+                                <svg class="h-6 w-6 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-sm font-semibold text-slate-700">Click or drag & drop image</p>
+                                <p class="mt-0.5 text-xs text-slate-400">JPG, PNG, WebP — max 2 MB</p>
+                            </div>
+                        </div>
+
+                        <div id="img-dz-preview" class="hidden flex-col items-center gap-2 w-full">
+                            <img id="img-preview-thumb" src="" alt="" class="h-36 w-full object-cover rounded-lg border border-slate-200">
+                            <p id="img-dz-filename" class="max-w-[220px] truncate text-sm font-semibold text-emerald-700"></p>
+                            <p class="text-xs text-slate-400">Click to change image</p>
+                        </div>
+
+                        <input type="file" name="image" id="robot-image-input"
+                               accept="image/jpeg,image/png,image/webp" class="hidden">
+                    </label>
+
+                    <p class="text-[11px] text-slate-400">Displayed on the robot detail page visible to members.</p>
                 </div>
             </div>
 
@@ -71,7 +119,7 @@
                             <div class="flex items-center rounded-xl border border-slate-300 bg-white focus-within:border-brand-400 focus-within:ring-2 focus-within:ring-brand-100 transition overflow-hidden">
                                 <span class="px-2.5 text-sm font-semibold text-slate-400 border-r border-slate-200 bg-slate-50 self-stretch flex items-center">$</span>
                                 <input type="number" step="0.01" min="0" name="price"
-                                       value="{{ old('price', $robot->exists ? $robot->price : '') }}"
+                                       value="{{ old('price', $robot->exists ? number_format($robot->price / 100, 2, '.', '') : '') }}"
                                        class="flex-1 px-2.5 py-2 text-sm font-semibold text-slate-900 outline-none bg-transparent"
                                        placeholder="0.00" required>
                             </div>
@@ -108,4 +156,34 @@
             </div>
         </div>
     </form>
+
+    <script>
+    (function () {
+        var input   = document.getElementById('robot-image-input');
+        var idle    = document.getElementById('img-dz-idle');
+        var preview = document.getElementById('img-dz-preview');
+        var thumb   = document.getElementById('img-preview-thumb');
+        var fname   = document.getElementById('img-dz-filename');
+        var curWrap = document.getElementById('current-img-wrap');
+
+        if (!input) return;
+
+        input.addEventListener('change', function () {
+            var file = this.files[0];
+            if (!file) return;
+
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                thumb.src = e.target.result;
+                fname.textContent = file.name;
+                idle.classList.add('hidden');
+                preview.classList.remove('hidden');
+                preview.classList.add('flex');
+                // Hide old image when a new one is chosen
+                if (curWrap) curWrap.classList.add('hidden');
+            };
+            reader.readAsDataURL(file);
+        });
+    })();
+    </script>
 </x-layouts.admin>

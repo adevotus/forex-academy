@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Payment;
 use App\Models\PaymentMethod;
 use App\Models\Setting;
+use App\Utils\LoggerUtil;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -46,23 +47,25 @@ class PendingController extends Controller
         $path = $request->file('proof')->store('payment-proofs', 'public');
 
         // Update existing pending payment or create a new one
+        //dd($request);
         $payment = Payment::where('user_id', $user->id)
             ->where('type', 'registration')
             ->where('status', 'pending')
             ->latest()
             ->first();
-
         if ($payment) {
             $payment->update(['proof_path' => $path]);
         } else {
-            Payment::create([
+            $payment =([
                 'user_id'    => $user->id,
                 'type'       => 'registration',
-                'amount'     => Setting::get('registration_fee', 300),
+                'amount'     => (int) round((float) Setting::get('registration_fee', '300') * 100),
                 'currency'   => Setting::get('currency', 'USD'),
                 'status'     => 'pending',
                 'proof_path' => $path,
             ]);
+
+            Payment::create($payment);
         }
 
         return redirect()->route('member.pending')

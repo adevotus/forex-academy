@@ -1,56 +1,183 @@
 <x-layouts.member :title="$robot->name">
     <x-slot name="header">
         <div>
-            <a href="{{ route('member.robots.index') }}" class="text-xs font-medium text-brand-600 hover:text-brand-700">&larr; Robots</a>
+            <a href="{{ route('member.robots.index') }}" class="inline-flex items-center gap-1.5 text-xs font-medium text-brand-600 hover:text-brand-700 transition">
+                <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+                Robots
+            </a>
             <h1 class="mt-2 text-2xl font-bold text-slate-900">{{ $robot->name }}</h1>
         </div>
     </x-slot>
 
     <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm lg:col-span-2">
-            <p class="text-sm leading-relaxed text-slate-600">{{ $robot->description }}</p>
 
-            @if ($unlocked)
-                <div class="mt-6 rounded-xl border border-emerald-200 bg-emerald-50 p-5">
-                    <p class="font-semibold text-emerald-700">Robot Active</p>
-                    <p class="mt-1 text-sm text-slate-500">Subscription expires {{ $subscription?->expires_at?->format('M d, Y') }}.</p>
-                    <a href="#" class="mt-4 inline-flex items-center gap-2 rounded-xl bg-brand-600 px-4 py-2 text-sm font-bold text-white shadow-sm hover:bg-brand-700 transition">
-                        Download EA File
-                    </a>
-                </div>
+        {{-- ── MAIN CARD ─────────────────────────────────────── --}}
+        <div class="lg:col-span-2 space-y-5">
 
-                <div class="mt-8">
-                    <h2 class="font-semibold text-slate-900">How to Install &amp; Use</h2>
-                    <ol class="mt-3 space-y-2 text-sm text-slate-500">
-                        <li>1. Download the EA file above and copy it into your MT4/MT5 "Experts" folder.</li>
-                        <li>2. Restart your trading terminal and drag the EA onto your chosen chart.</li>
-                        <li>3. Apply the recommended risk parameters from the setup checklist.</li>
-                        <li>4. Enable "Algo Trading" and confirm the robot is running.</li>
-                    </ol>
-                </div>
-            @else
-                <div class="mt-6 rounded-xl border border-amber-200 bg-amber-50 p-5">
-                    <p class="font-semibold text-slate-900">{{ $robot->priceFormatted() }} / {{ $robot->duration_days }} days</p>
-                    <p class="mt-1 text-sm text-slate-500">Pay using the payment methods below and upload your receipt.</p>
-                    <button type="button"
-                            onclick="openRobotModal('{{ route('member.robots.unlock', $robot) }}', {{ json_encode($robot->name) }}, {{ json_encode($robot->priceFormatted()) }})"
-                            class="mt-4 inline-flex items-center gap-2 rounded-xl bg-amber-500 px-4 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-amber-600 transition">
-                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-                        Request Unlock
-                    </button>
-                </div>
-            @endif
+            {{-- Description card (with optional inline image) --}}
+            <div class="rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-sm">
+
+                @if($robot->image)
+                    <div class="flex flex-col sm:flex-row">
+                        {{-- Image: compact left column --}}
+                        <div class="sm:w-44 sm:flex-shrink-0">
+                            <img src="{{ Storage::disk('public')->url($robot->image) }}"
+                                 alt="{{ $robot->name }}"
+                                 class="h-44 w-full object-cover sm:h-full">
+                        </div>
+                        {{-- Description beside the image --}}
+                        <div class="flex-1 p-5">
+                            <p class="text-sm leading-relaxed text-slate-600">{{ $robot->description }}</p>
+                        </div>
+                    </div>
+                @else
+                    <div class="p-6">
+                        <p class="text-sm leading-relaxed text-slate-600">{{ $robot->description }}</p>
+                    </div>
+                @endif
+
+                {{-- Active / locked state --}}
+                <div class="px-5 pb-5 pt-1">
+
+                @if ($unlocked)
+                    {{-- ── ACTIVE STATE ── --}}
+                    <div class="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50 overflow-hidden">
+                        {{-- Status header --}}
+                        <div class="flex items-center gap-3 bg-emerald-600 px-5 py-3">
+                            <div class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-white/20">
+                                <svg class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="font-bold text-white text-sm">Robot Active</p>
+                                <p class="text-emerald-100 text-xs">Your subscription is live</p>
+                            </div>
+                            <div class="ml-auto text-right">
+                                <p class="text-[10px] font-medium uppercase tracking-wide text-emerald-200">Expires</p>
+                                <p class="text-sm font-bold text-white">{{ $subscription?->expires_at?->format('M d, Y') ?? 'Lifetime' }}</p>
+                            </div>
+                        </div>
+
+                        {{-- Download area --}}
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 px-5 py-4">
+                            <div>
+                                <p class="text-sm font-semibold text-slate-800">Download your EA file</p>
+                                <p class="mt-0.5 text-xs text-slate-500">Place it in your MT4/MT5 "Experts" folder to activate.</p>
+                            </div>
+                            @if($robot->file_path)
+                                <a href="{{ asset('storage/'.$robot->file_path) }}"
+                                   download
+                                   class="inline-flex flex-shrink-0 items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-emerald-700 transition active:scale-[.98]">
+                                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/>
+                                    </svg>
+                                    Download EA File
+                                </a>
+                            @else
+                                <span class="inline-flex flex-shrink-0 items-center gap-2 rounded-xl bg-slate-200 px-5 py-2.5 text-sm font-bold text-slate-400 cursor-not-allowed">
+                                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/>
+                                    </svg>
+                                    File Not Available
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+
+                    {{-- How to Install --}}
+                    <div class="mt-6">
+                        <h2 class="font-semibold text-slate-900 mb-3">How to Install &amp; Use</h2>
+                        <div class="space-y-3">
+                            @foreach([
+                                'Download the EA file above and copy it into your MT4/MT5 "Experts" folder.',
+                                'Restart your trading terminal and drag the EA onto your chosen chart.',
+                                'Apply the recommended risk parameters from the setup checklist.',
+                                'Enable "Algo Trading" and confirm the robot is running.',
+                            ] as $i => $step)
+                                <div class="flex items-start gap-3">
+                                    <span class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-brand-100 text-xs font-bold text-brand-700 mt-0.5">{{ $i + 1 }}</span>
+                                    <p class="text-sm text-slate-600 leading-relaxed">{{ $step }}</p>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+
+                @else
+                    {{-- ── LOCKED STATE ── --}}
+                    <div class="mt-6 rounded-2xl border border-amber-200 bg-amber-50 p-5">
+                        <div class="flex items-start justify-between gap-4">
+                            <div>
+                                <p class="font-semibold text-slate-900">{{ $robot->priceFormatted() }} / {{ $robot->duration_days }} days</p>
+                                <p class="mt-1 text-sm text-slate-500">Pay using the payment methods below and upload your receipt.</p>
+                            </div>
+                            <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-amber-500/10">
+                                <svg class="h-5 w-5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                            </div>
+                        </div>
+                        <button type="button"
+                                onclick="openRobotModal('{{ route('member.robots.unlock', $robot) }}', {{ json_encode($robot->name) }}, {{ json_encode($robot->priceFormatted()) }})"
+                                class="mt-4 inline-flex items-center gap-2 rounded-xl bg-amber-500 px-4 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-amber-600 transition">
+                            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                            Request Unlock
+                        </button>
+                    </div>
+                @endif
+                </div>{{-- /px-6 pb-6 --}}
+            </div>
         </div>
 
-        <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-            <h2 class="font-semibold text-slate-900">Robot Performance Log</h2>
-            <p class="mt-2 text-sm text-slate-500">
-                {{ $unlocked ? 'Performance tracking becomes available once your robot is live on a connected account.' : 'Unlock this robot to start tracking performance here.' }}
-            </p>
+        {{-- ── SIDEBAR ─────────────────────────────────────────── --}}
+        <div class="space-y-4">
+
+            {{-- Robot details --}}
+            <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Robot Details</h2>
+                <dl class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <dt class="text-xs text-slate-500">Version</dt>
+                        <dd class="text-xs font-semibold text-slate-800">v{{ $robot->version }}</dd>
+                    </div>
+                    <div class="flex items-center justify-between border-t border-slate-100 pt-3">
+                        <dt class="text-xs text-slate-500">Price</dt>
+                        <dd class="text-xs font-semibold text-slate-800">{{ $robot->priceFormatted() }}</dd>
+                    </div>
+                    <div class="flex items-center justify-between border-t border-slate-100 pt-3">
+                        <dt class="text-xs text-slate-500">Duration</dt>
+                        <dd class="text-xs font-semibold text-slate-800">{{ $robot->duration_days ? $robot->duration_days.' days' : 'Lifetime' }}</dd>
+                    </div>
+                    @if($unlocked && $subscription)
+                        <div class="flex items-center justify-between border-t border-slate-100 pt-3">
+                            <dt class="text-xs text-slate-500">Status</dt>
+                            <dd class="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-bold text-emerald-700">
+                                <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+                                Active
+                            </dd>
+                        </div>
+                        <div class="flex items-center justify-between border-t border-slate-100 pt-3">
+                            <dt class="text-xs text-slate-500">Expires</dt>
+                            <dd class="text-xs font-semibold text-slate-800">{{ $subscription->expires_at?->format('M d, Y') ?? 'Lifetime' }}</dd>
+                        </div>
+                    @endif
+                </dl>
+            </div>
+
+            {{-- Performance log --}}
+            <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                <h2 class="font-semibold text-slate-900 text-sm mb-2">Robot Performance Log</h2>
+                @if($unlocked)
+                    <div class="flex items-start gap-2 rounded-xl bg-slate-50 border border-slate-100 p-3">
+                        <svg class="h-4 w-4 text-slate-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        <p class="text-xs text-slate-500 leading-relaxed">Performance tracking becomes available once your robot is live on a connected account.</p>
+                    </div>
+                @else
+                    <p class="text-xs text-slate-500">Unlock this robot to start tracking performance here.</p>
+                @endif
+            </div>
         </div>
     </div>
 
-    {{-- ── Robot Unlock Modal (shared with index) ── --}}
+    {{-- ── Robot Unlock Modal ── --}}
     <div id="robot-unlock-modal"
          class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/60 p-4 backdrop-blur-sm"
          onclick="if(event.target===this) closeRobotModal()">

@@ -42,15 +42,15 @@ class AuthenticatedSessionController extends Controller
             $knownIps = $sessions->pluck('ip_address')->toArray();
             $isKnown  = in_array($clientIp, $knownIps, true);
 
-            if (! $isKnown && count($knownIps) >= 2) {
-                // Third IP — block login
+            if (! $isKnown && count($knownIps) >= 1) {
+                // Different IP — block login (only 1 device allowed)
                 Auth::logout();
                 $request->session()->invalidate();
                 $request->session()->regenerateToken();
 
                 return back()->withErrors([
-                    'email' => 'Login blocked: this account is already registered on 2 devices. '
-                             . 'Please contact support to reset your session.',
+                    'email' => 'Login blocked: your account is registered to a different device. '
+                             . 'Please use your original device or contact admin .',
                 ])->onlyInput('email');
             }
 
