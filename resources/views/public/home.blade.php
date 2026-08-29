@@ -256,7 +256,7 @@
                                 </div>
                                 <div>
                                     <p style="font-size:10px; color:#94a3b8;">Win Rate</p>
-                                    <p style="font-size:13px; font-weight:700; color:#0f172a;">76.3%</p>
+                                    <p style="font-size:13px; font-weight:700; color:#0f172a;">98.0%</p>
                                 </div>
                             </div>
                         </div>

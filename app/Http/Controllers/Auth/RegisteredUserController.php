@@ -38,20 +38,11 @@ class RegisteredUserController extends Controller
             'country' => $request->country,
             'password' => Hash::make($request->password),
             'role' => 'member',
-            'status' => 'pending',
-        ]);
-
-        Payment::create([
-            'user_id' => $user->id,
-            'type' => 'registration',
-            'amount' => (int) round((float) Setting::get('registration_fee', '300') * 100),
-            'status' => 'pending',
+            'status' => 'approved',
         ]);
 
         event(new Registered($user));
 
-        Auth::login($user);
-
-        return redirect()->route('member.pending');
+        return redirect()->route('login')->with('status', 'Account created successfully! Please log in to continue.');
     }
 }

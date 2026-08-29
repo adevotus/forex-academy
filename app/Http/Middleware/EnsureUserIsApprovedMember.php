@@ -20,8 +20,11 @@ class EnsureUserIsApprovedMember
             return $next($request);
         }
 
-        if ($user->status !== 'approved') {
-            return redirect()->route('member.pending');
+        // Only block accounts that have been explicitly banned by an admin.
+        // All other statuses (active, pending, approved) can access the dashboard.
+        if ($user->status === 'suspended') {
+            Auth::logout();
+            return redirect()->route('login')->with('error', 'Your account has been suspended. Please contact support.');
         }
 
         return $next($request);
