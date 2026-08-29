@@ -15,12 +15,14 @@ use App\Http\Controllers\Admin\ProfileController as AdminProfileController;
 use App\Http\Controllers\Admin\RobotController as AdminRobotController;
 use App\Http\Controllers\Admin\SignalController as AdminSignalController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Member\BillingController;
 use App\Http\Controllers\Member\CourseController;
 use App\Http\Controllers\Member\DashboardController;
 use App\Http\Controllers\Member\MentorshipController;
 use App\Http\Controllers\Member\PendingController;
+use App\Http\Controllers\Member\ProfileController as MemberProfileController;
 use App\Http\Controllers\Member\RobotController;
 use App\Http\Controllers\Member\SignalController;
 use App\Http\Controllers\ContactController;
@@ -52,6 +54,12 @@ Route::middleware('guest')->group(function () {
     Route::post('register', [RegisteredUserController::class, 'store']);
     Route::get('login', [AuthenticatedSessionController::class, 'create'])->name('login');
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
+
+    // Forgot / reset password (no email token — verify email in DB, then reset directly)
+    Route::get('forgot-password', [ForgotPasswordController::class, 'showEmailForm'])->name('password.request');
+    Route::post('forgot-password', [ForgotPasswordController::class, 'verifyEmail'])->name('password.verify');
+    Route::get('reset-password', [ForgotPasswordController::class, 'showResetForm'])->name('password.reset.form');
+    Route::post('reset-password', [ForgotPasswordController::class, 'resetPassword'])->name('password.update');
 });
 Route::middleware('auth')->post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
@@ -86,6 +94,11 @@ Route::middleware('auth')->prefix('dashboard')->name('member.')->group(function 
         Route::post('/mentorship/{session}/book', [MentorshipController::class, 'book'])->name('mentorship.book');
 
         Route::get('/billing', [BillingController::class, 'index'])->name('billing.index');
+
+        // Profile
+        Route::get('/profile', [MemberProfileController::class, 'index'])->name('profile');
+        Route::put('/profile', [MemberProfileController::class, 'update'])->name('profile.update');
+        Route::put('/profile/password', [MemberProfileController::class, 'updatePassword'])->name('profile.password');
     });
 });
 

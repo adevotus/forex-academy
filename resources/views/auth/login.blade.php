@@ -187,6 +187,10 @@
                                class="h-4 w-4 rounded border-slate-300 text-brand-500 focus:ring-brand-400">
                         Remember me
                     </label>
+                    <a href="{{ route('password.request') }}"
+                       class="text-sm font-semibold text-brand-500 hover:text-brand-600 transition-colors">
+                        Forgot password?
+                    </a>
                 </div>
 
                 <button type="submit" class="btn-primary w-full py-3 text-base">
