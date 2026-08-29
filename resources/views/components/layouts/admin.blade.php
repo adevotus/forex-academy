@@ -20,6 +20,11 @@
                     <svg class="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
                     Overview
                 </a>
+                <a href="{{ route('admin.reports') }}"
+                   class="{{ request()->routeIs('admin.reports*') ? 'sidebar-link-active' : 'sidebar-link' }}">
+                    <svg class="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                    Reports
+                </a>
 
                 <p class="mb-2 mt-5 px-3 text-[10px] font-semibold uppercase tracking-widest text-slate-600">Management</p>
                 <a href="{{ route('admin.members.index') }}"
@@ -143,6 +148,7 @@
             <div id="mob-admin-menu" class="hidden flex-shrink-0 border-b border-slate-200 bg-white px-4 pb-4 lg:hidden">
                 <nav class="mt-3 space-y-1">
                     <a href="{{ route('admin.dashboard') }}"       class="{{ request()->routeIs('admin.dashboard')    ? 'nav-link-active' : 'nav-link' }}">Overview</a>
+                    <a href="{{ route('admin.reports') }}"         class="{{ request()->routeIs('admin.reports*')     ? 'nav-link-active' : 'nav-link' }}">Reports</a>
                     <a href="{{ route('admin.members.index') }}"   class="{{ request()->routeIs('admin.members.*')    ? 'nav-link-active' : 'nav-link' }}">Members</a>
                     <a href="{{ route('admin.payments.index') }}"  class="{{ request()->routeIs('admin.payments.*')   ? 'nav-link-active' : 'nav-link' }}">Payments</a>
                     <a href="{{ route('admin.notifications') }}"   class="{{ request()->routeIs('admin.notifications')? 'nav-link-active' : 'nav-link' }}">Notifications</a>

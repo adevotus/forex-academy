@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\ContactController as AdminContactController;
+use App\Http\Controllers\Admin\ReportController as AdminReportController;
 use App\Http\Controllers\Admin\CourseController as AdminCourseController;
 use App\Http\Controllers\Admin\TestimonialController as AdminTestimonialController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
@@ -110,6 +111,7 @@ Route::middleware('auth')->prefix('dashboard')->name('member.')->group(function 
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::get('/notifications', [AdminDashboardController::class, 'notifications'])->name('notifications');
+    Route::get('/reports', [AdminReportController::class, 'index'])->name('reports');
 
     // Members
     Route::get('/members', [AdminMemberController::class, 'index'])->name('members.index');
